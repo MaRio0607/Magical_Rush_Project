@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class PantallaJuego implements Screen
 {
     public static final float ANCHO_MAPA = 1600;   // Ancho del mapa en pixeles
-    public static final float ALTO_MAPA = 1100;
+    public static final float ALTO_MAPA = 1100;    // Alto del mapa en pixeles
 
     // Referencia al objeto de tipo Game (tiene setScreen para cambiar de pantalla)
     private Juego juego;
@@ -40,6 +40,7 @@ public class PantallaJuego implements Screen
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
     private Personaje rui;
     public static final int TAM_CELDA = 16;
+    public static final int TAM_RUI = 60;
 
     // HUD. Los componentes en la pantalla que no se mueven
     private OrthographicCamera camaraHUD;   // Cámara fija
@@ -52,7 +53,7 @@ public class PantallaJuego implements Screen
     private Texture texturaSalto;
     private Boton btnSalto;
 
-    // Fin del juego, Gana o e
+    // Fin del juego, Gana o pierde
     private Texture texturaGana;
     private Boton btnGana;
 
@@ -95,16 +96,19 @@ public class PantallaJuego implements Screen
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
         // Carga el mapa en memoria
         mapa = assetManager.get("Mapa.tmx");
-        //mapa.getLayers().get(0).setVisible(false);    // Pueden ocultar una capa así
+
         // Crear el objeto que dibujará el mapa
         rendererMapa = new OrthogonalTiledMapRenderer(mapa,batch);
         rendererMapa.setView(camara);
+
         // Cargar frames
         texturaPersonaje = assetManager.get("RUIS-Sheet.png");
+
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
+
         // Posición inicial del personaje
-        rui.getSprite().setPosition(Juego.ANCHO_CAMARA / 10, Juego.ALTO_CAMARA * 1.90f);
+        rui.getSprite().setPosition(Juego.ANCHO_CAMARA / 10, Juego.ALTO_CAMARA * 1.01f);
 
         // Crear los botones
         texturaBtnIzquierda = assetManager.get("izquierda.png");
@@ -221,7 +225,7 @@ public class PantallaJuego implements Screen
     }
 
     /*
-    Movimiento del personaje. SIMPLIFICAR LOGICA :(
+    Movimiento del personaje.
      */
     private void moverPersonaje() {
         // Prueba caída libre inicial o movimiento horizontal
@@ -239,7 +243,7 @@ public class PantallaJuego implements Screen
                 if (celda==null) {
                     // Celda vacía, entonces el personaje puede avanzar
                     rui.caer();
-                }  else {  // Las estrellas no lo detienen :)
+                }  else {
                     // Dejarlo sobre la celda que lo detiene
                     rui.setPosicion(rui.getX(), (celdaY + 1) * TAM_CELDA);
                     rui.setEstadoMovimiento(Personaje.EstadoMovimiento.QUIETO);

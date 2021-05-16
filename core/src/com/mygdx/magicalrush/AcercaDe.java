@@ -34,15 +34,6 @@ public class AcercaDe implements Screen
     private Texture texturaRegresar;
     private Boton btnRegresar;
 
-    // SISTEMA DE PARTICULAS
-    private ParticleEffect efecto;
-    private int indiceEmisor;
-    private Array<ParticleEmitter> emisores;
-    private int cuentaParticulas;
-    private float fps;
-
-    private ParticleEffect explosion;
-
 
     public AcercaDe(Juego juego) {
         this.juego = juego;
@@ -89,8 +80,6 @@ public class AcercaDe implements Screen
         texturaRegresar = assetManager.get("regresar.png");
 
         btnRegresar = new Boton(texturaRegresar);
-        //btnRegresar.setPosicion(3 * Plataforma.ANCHO_CAMARA / 4 - texturaRegresar.getWidth() / 2,
-        //Plataforma.ALTO_CAMARA / 2 - texturaRegresar.getHeight() / 2);
     }
 
     /*
@@ -145,8 +134,6 @@ public class AcercaDe implements Screen
         AssetManager assetManager = juego.getAssetManager();
         assetManager.unload("fondo_A.png");
         assetManager.unload("regresar.png");
-        efecto.dispose();
-        explosion.dispose();
     }
 
     /*
