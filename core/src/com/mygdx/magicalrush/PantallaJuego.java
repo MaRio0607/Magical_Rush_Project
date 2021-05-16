@@ -52,7 +52,7 @@ public class PantallaJuego implements Screen
     private Texture texturaSalto;
     private Boton btnSalto;
 
-    // Fin del juego, Gana o Pierde
+    // Fin del juego, Gana o e
     private Texture texturaGana;
     private Boton btnGana;
 
