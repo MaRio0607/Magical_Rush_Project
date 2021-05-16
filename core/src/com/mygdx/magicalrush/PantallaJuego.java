@@ -290,13 +290,10 @@ public class PantallaJuego implements Screen
     // Prueba si puede moverse a la izquierda o derecha
     private void probarChoqueParedes() {
         Personaje.EstadoMovimiento estado = rui.getEstadoMovimiento();
-        // Quitar porque este método sólo se llama cuando se está moviendo
-        if ( estado!= Personaje.EstadoMovimiento.MOV_DERECHA && estado!=Personaje.EstadoMovimiento.MOV_IZQUIERDA){
-            return;
-        }
+
         float px = rui.getX();    // Posición actual
         // Posición después de actualizar
-        px = rui.getEstadoMovimiento()==Personaje.EstadoMovimiento.MOV_DERECHA? px+Personaje.VELOCIDAD_X:
+        px = rui.getEstadoMovimiento()==Personaje.EstadoMovimiento.MOV_DERECHA? px+Personaje.VELOCIDAD_X+35:
                 px-Personaje.VELOCIDAD_X;
         int celdaX = (int)(px/TAM_CELDA);   // Casilla del personaje en X
         if (rui.getEstadoMovimiento()== Personaje.EstadoMovimiento.MOV_DERECHA) {
