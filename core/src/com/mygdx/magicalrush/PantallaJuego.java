@@ -172,13 +172,15 @@ public class PantallaJuego implements Screen
         batch.end();
     }
 
-    // Actualiza la posición de la cámara para que el personaje esté en el centro,
-    // excepto cuando está en la primera y última parte del mundo
+    // Divide el escenario en 3 partes, el inicio, medio y final
+    // Cambia la forma en que la camara interactua dependiendo de la zona
+    // Y crea limites en X y en Y que cubran solo el mapa
     private void actualizarCamara() {
         float posX = rui.getX();
         float posY = rui.getY();
         // Si está en la parte 'media'
         camara.position.set((int)posX,posY,0);
+        //Comportamiento del inicio a la parte media
         if(posX<=Juego.ANCHO_CAMARA/2)
         {
             if(posY<=ALTO_MAPA-Juego.ALTO_CAMARA)
@@ -191,7 +193,7 @@ public class PantallaJuego implements Screen
             }
 
         }
-
+        //Comportamiento de la parte media al final
         if(posX>=Juego.ANCHO_CAMARA/2 && posX+Juego.ANCHO_CAMARA/2<=ANCHO_MAPA)
         {
             if(posY<=ALTO_MAPA-Juego.ALTO_CAMARA)
@@ -203,7 +205,7 @@ public class PantallaJuego implements Screen
                 camara.position.set((int)posX, posY,0);
             }
         }
-
+        //Comportamiento de la parte final del mapa
         if(posX+Juego.ANCHO_CAMARA/2>=ANCHO_MAPA)
         {
             if(posY<=ALTO_MAPA-Juego.ALTO_CAMARA)
