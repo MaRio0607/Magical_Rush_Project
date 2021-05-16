@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Personaje
 {
+    //Comment Santiago
     public static final float VELOCIDAD_Y = -4f;   // Velocidad de caída
     public static final float VELOCIDAD_X = 2;     // Velocidad horizontal
 
