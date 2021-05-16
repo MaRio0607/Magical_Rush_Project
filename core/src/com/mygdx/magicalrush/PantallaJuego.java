@@ -120,11 +120,11 @@ public class PantallaJuego implements Screen
         btnSalto.setPosicion(Juego.ANCHO_CAMARA - 5 * TAM_CELDA, 5 * TAM_CELDA);
         btnSalto.setAlfa(0.7f);
         // Gana
-        texturaGana = assetManager.get("ganaste.png");
-        btnGana = new Boton(texturaGana);
-        btnGana.setPosicion(Juego.ANCHO_CAMARA/2-btnGana.getRectColision().width/2,
-                Juego.ALTO_CAMARA/2-btnGana.getRectColision().height/2);
-        btnGana.setAlfa(0.7f);
+        //texturaGana = assetManager.get("archivo.png");
+        //btnGana = new Boton(texturaGana);
+        //btnGana.setPosicion(Juego.ANCHO_CAMARA/2-btnGana.getRectColision().width/2,
+                //Juego.ALTO_CAMARA/2-btnGana.getRectColision().height/2);
+        //btnGana.setAlfa(0.7f);
 
     }
 

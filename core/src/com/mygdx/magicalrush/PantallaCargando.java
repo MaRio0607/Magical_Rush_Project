@@ -65,7 +65,7 @@ public class PantallaCargando implements Screen
         assetManager.load("izquierda.png", Texture.class);
         assetManager.load("salto.png", Texture.class);
         // Fin del juego
-        assetManager.load("ganaste.png", Texture.class);
+        //assetManager.load("archivo.png", Texture.class);
 
         Gdx.app.log("cargarRecursos", "Terminando...");
     }
