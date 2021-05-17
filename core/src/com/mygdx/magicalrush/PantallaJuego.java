@@ -53,6 +53,10 @@ public class PantallaJuego implements Screen
     private Texture texturaSalto;
     private Boton btnSalto;
 
+    // Botón Disparo
+    private Texture texturaDisp;
+    private Boton btnDisp;
+
     // Fin del juego, Gana o pierde
     private Texture texturaGana;
     private Boton btnGana;
@@ -114,15 +118,19 @@ public class PantallaJuego implements Screen
         texturaBtnIzquierda = assetManager.get("izquierda.png");
         btnIzquierda = new Boton(texturaBtnIzquierda);
         btnIzquierda.setPosicion(TAM_CELDA, 5 * TAM_CELDA);
-        btnIzquierda.setAlfa(0.7f); // Un poco de transparencia
+        //btnIzquierda.setAlfa(0.7f); // Un poco de transparencia
         texturaBtnDerecha = assetManager.get("derecha.png");
         btnDerecha = new Boton(texturaBtnDerecha);
-        btnDerecha.setPosicion(6 * TAM_CELDA, 5 * TAM_CELDA);
-        btnDerecha.setAlfa(0.7f); // Un poco de transparencia
+        btnDerecha.setPosicion(6 * TAM_CELDA+ 100, 5 * TAM_CELDA);
+        //btnDerecha.setAlfa(0.7f); // Un poco de transparencia
         texturaSalto = assetManager.get("salto.png");
         btnSalto = new Boton(texturaSalto);
-        btnSalto.setPosicion(Juego.ANCHO_CAMARA - 5 * TAM_CELDA, 5 * TAM_CELDA);
-        btnSalto.setAlfa(0.7f);
+        btnSalto.setPosicion(Juego.ANCHO_CAMARA - 5 * TAM_CELDA-250, 5 * TAM_CELDA);
+
+        texturaDisp = assetManager.get("salto.png");
+        btnDisp = new Boton(texturaDisp);
+        btnDisp.setPosicion(Juego.ANCHO_CAMARA - 5 * TAM_CELDA-100, 5 * TAM_CELDA);
+        //btnSalto.setAlfa(0.7f);
         // Gana
         //texturaGana = assetManager.get("archivo.png");
         //btnGana = new Boton(texturaGana);
@@ -171,7 +179,7 @@ public class PantallaJuego implements Screen
             btnIzquierda.render(batch);
             btnDerecha.render(batch);
             btnSalto.render(batch);
-
+            btnDisp.render(batch);
         }
         batch.end();
     }
@@ -343,6 +351,8 @@ public class PantallaJuego implements Screen
         AssetManager assetManager = juego.getAssetManager();
         assetManager.unload("RUIS-Sheet.png");
         assetManager.unload("derecha.png");
+        assetManager.unload("salto.png");
+        assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
         assetManager.unload("Mapa.tmx");
     }
