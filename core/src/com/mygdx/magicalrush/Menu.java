@@ -7,11 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -31,12 +27,15 @@ public class Menu implements Screen
     // Fondo
     private Texture texturaMenu;
     private Texture texturaB;
+    private Texture texturaC;
 
-    // Opciones
+    // botones
     private Texture texturaPlay;
     private Texture texturaAbout;
+    private Texture texturaInst;
     private Boton btnPlay;
     private Boton btnAbout;
+    private Boton btnInst;
 
     public Menu(Juego juego) {
         this.juego = juego;
@@ -68,8 +67,10 @@ public class Menu implements Screen
 
 
         assetManager.load("fondo_A.png", Texture.class);    // Cargar imagen
+        assetManager.load("magical_rush.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("about.png", Texture.class);
+        assetManager.load("inst.png",Texture.class);
         assetManager.load("play.png", Texture.class);
         // Texturas de los botones
 
@@ -81,16 +82,19 @@ public class Menu implements Screen
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
         // Carga el mapa en memoria
         texturaMenu = assetManager.get("fondo_A.png");
-        texturaB = assetManager.get("btones.png");
+        texturaB=assetManager.get("magical_rush.png");
+        texturaC = assetManager.get("btones.png");
         texturaPlay = assetManager.get("play.png");
         texturaAbout = assetManager.get("about.png");
+        texturaInst=assetManager.get("inst.png");
 
 
         btnAbout = new Boton(texturaAbout);
-        btnAbout.setPosicion(500,250);
+        btnAbout.setPosicion(500,150);
         btnPlay = new Boton(texturaPlay);
         btnPlay.setPosicion(490,350);
-
+        btnInst=new Boton(texturaInst);
+        btnInst.setPosicion(450,250);
 
     }
 
@@ -110,9 +114,11 @@ public class Menu implements Screen
         batch.begin();
 
         batch.draw(texturaMenu, 0, 0);
-        batch.draw(texturaB, 390, 100);
+        batch.draw(texturaB,330,400);
+        batch.draw(texturaC, 390, 100);
         btnAbout.render(batch);
         btnPlay.render(batch);
+        btnInst.render(batch);
         batch.end();
     }
 
@@ -147,9 +153,11 @@ public class Menu implements Screen
         // Los assets se liberan a través del assetManager
         AssetManager assetManager = juego.getAssetManager();
         assetManager.unload("fondo_A.jpg");
+        assetManager.unload("magical_rush.png");
         assetManager.unload("btones.png");
         assetManager.unload("play.png");
         assetManager.unload("about.png");
+        assetManager.unload("inst.png");
     }
 
     /*
@@ -184,6 +192,8 @@ public class Menu implements Screen
                 juego.setScreen(new PantallaCargando(juego));
             } else if (btnAbout.contiene(x,y)){
                 juego.setScreen(new AcercaDe(juego));
+            }else if (btnInst.contiene(x,y)){
+                juego.setScreen(new Instrucciones(juego));
             }
             return true;    // Indica que ya procesó el evento
         }

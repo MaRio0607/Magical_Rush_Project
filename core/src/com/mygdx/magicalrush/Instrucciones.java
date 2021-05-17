@@ -7,16 +7,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class AcercaDe implements Screen
-{
+public class Instrucciones implements Screen {
     // Referencia al objeto de tipo Game (tiene setScreen para cambiar de pantalla)
     private Juego juego;
 
@@ -35,7 +31,7 @@ public class AcercaDe implements Screen
     private Boton btnRegresar;
 
 
-    public AcercaDe(Juego juego) {
+    public Instrucciones(Juego juego) {
         this.juego = juego;
     }
 
@@ -58,7 +54,6 @@ public class AcercaDe implements Screen
         Gdx.input.setInputProcessor(new ProcesadorEntrada());
 
     }
-
     // Carga los recursos a través del administrador de assets
     private void cargarRecursos() {
         // Cargar las texturas/mapas
@@ -86,8 +81,7 @@ public class AcercaDe implements Screen
     Este método se está ejecutando muchas veces por segundo.
      */
     @Override
-    public void render(float delta) { // delta es el tiempo entre frames (Gdx.graphics.getDeltaTime())
-
+    public void render(float delta) {
         // Dibujar
         borrarPantalla();
 
@@ -100,7 +94,6 @@ public class AcercaDe implements Screen
         btnRegresar.render(batch);
         batch.end();
     }
-
     private void borrarPantalla() {
         Gdx.gl.glClearColor(0.42f, 0.55f, 1, 1);    // r, g, b, alpha
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -126,7 +119,6 @@ public class AcercaDe implements Screen
 
     }
 
-    // Libera los assets
     @Override
     public void dispose() {
         // Los assets se liberan a través del assetManager
@@ -187,5 +179,4 @@ public class AcercaDe implements Screen
             y = coordenadas.y;
         }
     }
-
 }
