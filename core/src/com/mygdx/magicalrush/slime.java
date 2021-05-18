@@ -20,10 +20,11 @@ public class slime {
         TextureRegion region= new TextureRegion(texture);
         TextureRegion [][] texturas= region.split(128,116);
     }
-    TextureRegion[] arrFrames={texturas[0][0], texturas[0][1]};
-    animation= new Animation<TextureRegion>(0.3f,arrFrames);
-    animation.setPlayMode(Animation.PlayMode.LOOP);
-    timerAnimacion=0;
+
+    //TextureRegion[] arrFrames={texturas[0][0], texturas[0][1]};
+    //animation= new Animation<TextureRegion>(0.3f,arrFrames);
+    //animation.setPlayMode(Animation.PlayMode.LOOP);
+    //timerAnimacion=0;
 
 
 

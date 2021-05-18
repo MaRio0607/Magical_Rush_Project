@@ -86,7 +86,7 @@ public class PantallaJuego implements Screen
         camaraHUD.position.set(Juego.ANCHO_CAMARA / 2, Juego.ALTO_CAMARA / 2, 0);
         camaraHUD.update();
 
-        //cargarRecursos();
+        cargarRecursos();
         crearObjetos();
 
         // Indicar el objeto que atiende los eventos de touch (entrada en general)
@@ -94,6 +94,16 @@ public class PantallaJuego implements Screen
 
         estadoJuego = EstadosJuego.JUGANDO;
 
+    }
+
+    private void cargarRecursos(){
+        // Cargar las texturas/mapas
+        AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
+
+        assetManager.load("RUIS-Sheet.png",Texture.class);
+        assetManager.load("disparo.png", Texture.class);
+        // Se bloquea hasta que cargue todos los recursos
+        assetManager.finishLoading();
     }
 
     private void crearObjetos() {
@@ -127,7 +137,7 @@ public class PantallaJuego implements Screen
         btnSalto = new Boton(texturaSalto);
         btnSalto.setPosicion(Juego.ANCHO_CAMARA - 5 * TAM_CELDA-250, 5 * TAM_CELDA);
 
-        texturaDisp = assetManager.get("salto.png");
+        texturaDisp = assetManager.get("disparo.png");
         btnDisp = new Boton(texturaDisp);
         btnDisp.setPosicion(Juego.ANCHO_CAMARA - 5 * TAM_CELDA-100, 5 * TAM_CELDA);
         //btnSalto.setAlfa(0.7f);
