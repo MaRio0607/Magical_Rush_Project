@@ -15,7 +15,7 @@ public class Personaje
     private Sprite sprite;  // Sprite cuando no se mueve
 
     // Animación
-    private Animation animacion;    // Caminando
+    private Animation animacionCaminando;    // Caminando
     private float timerAnimacion;   // tiempo para calcular el frame
 
     // Estados del personaje
@@ -39,9 +39,9 @@ public class Personaje
         // La divide en frames de **x**
         TextureRegion[][] texturaPersonaje = texturaCompleta.split(60,64);
         // Crea la animación con tiempo de 0.25 segundos entre frames.
-        animacion = new Animation(0.2f,texturaPersonaje[3][3], texturaPersonaje[3][2], texturaPersonaje[3][1], texturaPersonaje[3][0] );
+        animacionCaminando = new Animation(0.2f,texturaPersonaje[3][3], texturaPersonaje[3][2], texturaPersonaje[3][1], texturaPersonaje[3][0] );
         // Animación infinita
-        animacion.setPlayMode(Animation.PlayMode.LOOP);
+        animacionCaminando.setPlayMode(Animation.PlayMode.LOOP);
         // Inicia el timer que contará tiempo para saber qué frame se dibuja
         timerAnimacion = 0;
         // Crea el sprite cuando para el personaje quieto (idle)
@@ -59,7 +59,7 @@ public class Personaje
                 // Incrementa el timer para calcular el frame que se dibuja
                 timerAnimacion += Gdx.graphics.getDeltaTime();
                 // Obtiene el frame que se debe mostrar (de acuerdo al timer)
-                TextureRegion region = (TextureRegion)animacion.getKeyFrame(timerAnimacion);
+                TextureRegion region = (TextureRegion) animacionCaminando.getKeyFrame(timerAnimacion);
                 // Dirección correcta
                 if (estadoMovimiento==EstadoMovimiento.MOV_IZQUIERDA) {
                     if (!region.isFlipX()) {

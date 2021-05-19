@@ -13,6 +13,13 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -57,12 +64,21 @@ public class PantallaJuego implements Screen
     private Texture texturaDisp;
     private Boton btnDisp;
 
+
+    // Botón Disparo
+    private Texture texturePausa;
+    private Boton btnPausa;
+
     // Fin del juego, Gana o pierde
     private Texture texturaGana;
     private Boton btnGana;
 
+    //PAUSA
+    private EscenaPausa escenaPausa;
+    private ProcesadorEntrada procesadorEntrada;
+
     // Estados del juego
-    private EstadosJuego estadoJuego;
+    private EstadosJuego estadoJuego=EstadosJuego.JUGANDO;
 
     public PantallaJuego(Juego juego) {
         this.juego = juego;
@@ -102,6 +118,10 @@ public class PantallaJuego implements Screen
 
         assetManager.load("RUIS-Sheet.png",Texture.class);
         assetManager.load("disparo.png", Texture.class);
+        assetManager.load("Cont_bot.png",Texture.class);
+        assetManager.load("btones.png",Texture.class);
+        assetManager.load("PausaBoton.png",Texture.class);
+
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
     }
@@ -140,6 +160,10 @@ public class PantallaJuego implements Screen
         texturaDisp = assetManager.get("disparo.png");
         btnDisp = new Boton(texturaDisp);
         btnDisp.setPosicion(Juego.ANCHO_CAMARA - 5 * TAM_CELDA-100, 5 * TAM_CELDA);
+
+        texturePausa = assetManager.get("PausaBoton.png");
+        btnPausa = new Boton(texturePausa);
+        btnPausa.setPosicion(ANCHO_MAPA/2-200, ALTO_MAPA/2+50);
         //btnSalto.setAlfa(0.7f);
         // Gana
         //texturaGana = assetManager.get("archivo.png");
@@ -190,8 +214,13 @@ public class PantallaJuego implements Screen
             btnDerecha.render(batch);
             btnSalto.render(batch);
             btnDisp.render(batch);
+            btnPausa.render(batch);
         }
         batch.end();
+
+        if(estadoJuego==EstadosJuego.PAUSADO && escenaPausa !=null){
+            escenaPausa.draw();
+        }
     }
 
     // Divide el escenario en 3 partes, el inicio, medio y final
@@ -442,7 +471,32 @@ public class PantallaJuego implements Screen
             y = coordenadas.y;
         }
     }
+    private class EscenaPausa extends Stage {
+        private Texture textureFondo;
+        public  EscenaPausa(Viewport vista){
+            super(vista);//pasa la vista al constructor stage
+            textureFondo=new Texture("btones.png");
+            Image imgeFondo=new Image(textureFondo);
+            imgeFondo.setPosition(ANCHO_MAPA/2,ALTO_MAPA/2, Align.center);
+            addActor(imgeFondo);
+            //Boton continuar
+            Texture textureBtn=new Texture("Cont_boy.png");
+            TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
+            Button btn = new Button(trd);
+            addActor(btn);
+            btn.setPosition(ANCHO_MAPA/2,ALTO_MAPA/2,Align.center);
+            btn.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    //QUITAR Pausa
+                    estadoJuego=EstadosJuego.JUGANDO;
+                    Gdx.input.setInputProcessor(procesadorEntrada);
+                }
+            });
+        }
 
+    }
     public enum EstadosJuego {
         GANO,
         JUGANDO,
