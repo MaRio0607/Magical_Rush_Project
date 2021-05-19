@@ -106,9 +106,9 @@ public class PantallaJuego implements Screen
         crearObjetos();
 
         // Indicar el objeto que atiende los eventos de touch (entrada en general)
-        Gdx.input.setInputProcessor(new ProcesadorEntrada());
-
-        estadoJuego = EstadosJuego.JUGANDO;
+        //poner input procesor
+        procesadorEntrada=new ProcesadorEntrada();
+        Gdx.input.setInputProcessor(procesadorEntrada);
 
     }
 
@@ -163,7 +163,7 @@ public class PantallaJuego implements Screen
 
         texturePausa = assetManager.get("PausaBoton.png");
         btnPausa = new Boton(texturePausa);
-        btnPausa.setPosicion(ANCHO_MAPA/2-200, ALTO_MAPA/2+50);
+        btnPausa.setPosicion(ANCHO_MAPA/2+400, ALTO_MAPA/2+100);
         //btnSalto.setAlfa(0.7f);
         // Gana
         //texturaGana = assetManager.get("archivo.png");
@@ -424,6 +424,14 @@ public class PantallaJuego implements Screen
                 } else if (btnSalto.contiene(x, y)) {
                     // Tocó el botón saltar
                     rui.saltar();
+                } else if ((btnPausa.contiene(x, y))) {
+
+                    if (escenaPausa==null){//INICIALIZACION LAZY
+                        escenaPausa=new EscenaPausa(vista);
+                    }
+                    estadoJuego=EstadosJuego.PAUSADO;
+                    //CAMBIAR PROCESADOR
+                    Gdx.input.setInputProcessor(escenaPausa);
                 }
             } else if (estadoJuego==EstadosJuego.GANO) {
                 if (btnGana.contiene(x,y)) {
@@ -472,19 +480,20 @@ public class PantallaJuego implements Screen
         }
     }
     private class EscenaPausa extends Stage {
+
         private Texture textureFondo;
         public  EscenaPausa(Viewport vista){
             super(vista);//pasa la vista al constructor stage
             textureFondo=new Texture("btones.png");
             Image imgeFondo=new Image(textureFondo);
-            imgeFondo.setPosition(ANCHO_MAPA/2,ALTO_MAPA/2, Align.center);
+            imgeFondo.setPosition(ANCHO_MAPA/2-150,ALTO_MAPA/2+100, Align.center);
             addActor(imgeFondo);
             //Boton continuar
-            Texture textureBtn=new Texture("Cont_boy.png");
+            Texture textureBtn=new Texture("Cont_bot.png");
             TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
             Button btn = new Button(trd);
             addActor(btn);
-            btn.setPosition(ANCHO_MAPA/2,ALTO_MAPA/2,Align.center);
+            btn.setPosition(ANCHO_MAPA/2-150,ALTO_MAPA/2+100,Align.center);
             btn.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
