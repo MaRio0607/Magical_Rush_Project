@@ -534,7 +534,7 @@ public class PantallaJuego implements Screen
             TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
             Button btn = new Button(trd);
             addActor(btn);
-            btn.setPosition(1280/2,720/2+400);
+            btn.setPosition(1280/2-130,720/2+400);
             btn.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
