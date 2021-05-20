@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -79,6 +80,14 @@ public class PantallaJuego implements Screen
 
     // Estados del juego
     private EstadosJuego estadoJuego=EstadosJuego.JUGANDO;
+
+    //hitbox
+    Rectangle SlimeHitbox;
+    Rectangle RuiHitbox;
+    float x,y;
+
+
+
 
     public PantallaJuego(Juego juego) {
         this.juego = juego;
@@ -170,9 +179,15 @@ public class PantallaJuego implements Screen
         //btnGana = new Boton(texturaGana);
         //btnGana.setPosicion(Juego.ANCHO_CAMARA/2-btnGana.getRectColision().width/2,
                 //Juego.ALTO_CAMARA/2-btnGana.getRectColision().height/2);
-        //btnGana.setAlfa(0.7f);
+        //btnGana.setAlfa(0.7f);}
+
+        //hitboxes
+        RuiHitbox=new Rectangle(x,y,70,70);
+        SlimeHitbox=new Rectangle(x,y,58,58);
 
     }
+
+
 
     /*
     Dibuja TODOS los elementos del juego en la pantalla.
@@ -221,6 +236,10 @@ public class PantallaJuego implements Screen
         if(estadoJuego==EstadosJuego.PAUSADO && escenaPausa !=null){
             escenaPausa.draw();
         }
+        //HITBOXES DEL PERSONAJE
+        RuiHitbox.setPosition(x,y);
+        System.out.println(RuiHitbox.overlaps(SlimeHitbox));
+
     }
 
     // Divide el escenario en 3 partes, el inicio, medio y final

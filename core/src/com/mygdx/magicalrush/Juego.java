@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Juego extends Game
 {
@@ -15,6 +16,7 @@ public class Juego extends Game
     // Administra la carga de los assets del juego
     private final AssetManager assetManager = new AssetManager();
 
+
     @Override
     public void create() {
 
@@ -23,7 +25,12 @@ public class Juego extends Game
                 new TmxMapLoader(new InternalFileHandleResolver()));
         // Pantalla inicial
         setScreen(new Menu(this));
+
+
+
+
     }
+
 
     // Método accesor de assetManager
     public AssetManager getAssetManager() {
