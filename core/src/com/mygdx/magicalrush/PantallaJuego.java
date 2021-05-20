@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -49,6 +50,10 @@ public class PantallaJuego implements Screen
     private Personaje rui;
     public static final int TAM_CELDA = 16;
     public static final int TAM_RUI = 60;
+
+    //Disparo del personaje
+    private Array<Disparo> arrBolas;
+    private Texture texturaBola;
 
     // HUD. Los componentes en la pantalla que no se mueven
     private OrthographicCamera camaraHUD;   // Cámara fija
@@ -113,12 +118,17 @@ public class PantallaJuego implements Screen
 
         cargarRecursos();
         crearObjetos();
+        crearBolas();
 
         // Indicar el objeto que atiende los eventos de touch (entrada en general)
         //poner input procesor
         procesadorEntrada=new ProcesadorEntrada();
         Gdx.input.setInputProcessor(procesadorEntrada);
 
+    }
+    private void crearBolas() {
+        arrBolas=new Array<>();
+        texturaBola=new Texture("SHOOT.png");
     }
 
     private void cargarRecursos(){
@@ -128,6 +138,7 @@ public class PantallaJuego implements Screen
         assetManager.load("RUIS-Sheet.png",Texture.class);
         assetManager.load("disparo.png", Texture.class);
         assetManager.load("Cont_bot.png",Texture.class);
+        assetManager.load("SHOOT.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("PausaBoton.png",Texture.class);
 
@@ -195,7 +206,7 @@ public class PantallaJuego implements Screen
      */
     @Override
     public void render(float delta) { // delta es el tiempo entre frames (Gdx.graphics.getDeltaTime())
-
+        actualizar(delta);
         if (estadoJuego!=EstadosJuego.PERDIO) {
             // Actualizar objetos en la pantalla
             moverPersonaje();
@@ -215,6 +226,10 @@ public class PantallaJuego implements Screen
 
         rui.render(batch);    // Dibuja el personaje
 
+        //Dibujar bolas de fuego
+        for (Disparo bolaFuego:arrBolas){
+            bolaFuego.render(batch);
+        }
         batch.end();
 
         // Dibuja el HUD
@@ -290,6 +305,27 @@ public class PantallaJuego implements Screen
         camara.update();
     }
 
+    private void actualizar(float delta) {
+        if (estadoJuego==EstadosJuego.JUGANDO){
+           // actualizarFondo();
+           // actualizarGoombas(delta);
+            actualizarDisparo(delta);
+        }
+
+    }
+
+    private void actualizarDisparo(float delta) {
+        for (int i=arrBolas.size-1;i>=0;i--){
+            Disparo bolaFuego = arrBolas.get(i);
+            bolaFuego.mover(delta);
+            //Prueba si la bola debe desaparecer
+            if(bolaFuego.getX()>1280){
+                //borrar el objeto
+                arrBolas.removeIndex(i);
+            }
+        }
+    }
+
     /*
     Movimiento del personaje.
      */
@@ -352,6 +388,7 @@ public class PantallaJuego implements Screen
                 break;
         }
     }
+
 
     // Prueba si puede moverse a la izquierda o derecha
     private void probarChoqueParedes() {
@@ -451,6 +488,10 @@ public class PantallaJuego implements Screen
                     estadoJuego=EstadosJuego.PAUSADO;
                     //CAMBIAR PROCESADOR
                     Gdx.input.setInputProcessor(escenaPausa);
+                }else if (btnDisp.contiene(x,y)){
+                    //Dispara
+                    Disparo bolaFuego = new Disparo(texturaBola,rui.getSprite().getX()+40,rui.getSprite().getY()+10);
+                    arrBolas.add(bolaFuego);
                 }
             } else if (estadoJuego==EstadosJuego.GANO) {
                 if (btnGana.contiene(x,y)) {
@@ -505,14 +546,14 @@ public class PantallaJuego implements Screen
             super(vista);//pasa la vista al constructor stage
             textureFondo=new Texture("btones.png");
             Image imgeFondo=new Image(textureFondo);
-            imgeFondo.setPosition(ANCHO_MAPA/2-150,ALTO_MAPA/2+100, Align.center);
+            imgeFondo.setPosition(1280/2,720/2+400, Align.center);
             addActor(imgeFondo);
             //Boton continuar
             Texture textureBtn=new Texture("Cont_bot.png");
             TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
             Button btn = new Button(trd);
             addActor(btn);
-            btn.setPosition(ANCHO_MAPA/2-150,ALTO_MAPA/2+100,Align.center);
+            btn.setPosition(1280/2-130,720/2+400);
             btn.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
