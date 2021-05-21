@@ -499,6 +499,7 @@ public class PantallaJuego implements Screen
 
                     if (escenaPausa==null){//INICIALIZACION LAZY
                         escenaPausa=new EscenaPausa(vista);
+
                     }
                     estadoJuego=EstadosJuego.PAUSADO;
                     //CAMBIAR PROCESADOR
@@ -568,7 +569,7 @@ public class PantallaJuego implements Screen
             TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
             Button btn = new Button(trd);
             addActor(btn);
-            btn.setPosition(1280/2-130,720/2+400);
+            btn.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+400));
             btn.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
