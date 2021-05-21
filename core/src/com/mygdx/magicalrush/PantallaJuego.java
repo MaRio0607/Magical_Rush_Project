@@ -91,7 +91,10 @@ public class PantallaJuego implements Screen
     Rectangle RuiHitbox;
     float x,y;
 
-
+    // Fondo
+    private Texture texturaNubes;
+    private float xFondo = 0;
+    private float yFondo = 0;
 
 
     public PantallaJuego(Juego juego) {
@@ -141,6 +144,7 @@ public class PantallaJuego implements Screen
         assetManager.load("SHOOT.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("PausaBoton.png",Texture.class);
+        assetManager.load("nubes.png",Texture.class);
 
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
@@ -148,6 +152,8 @@ public class PantallaJuego implements Screen
 
     private void crearObjetos() {
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
+        //fondo
+        texturaNubes = assetManager.get("nubes.png");
         // Carga el mapa en memoria
         mapa = assetManager.get("Mapa.tmx");
 
@@ -216,7 +222,13 @@ public class PantallaJuego implements Screen
         // Dibujar
         borrarPantalla();
 
+
         batch.setProjectionMatrix(camara.combined);
+
+        //Dibujar fondo
+        batch.begin();
+        batch.draw(texturaNubes, xFondo, yFondo);
+        batch.end();
 
         rendererMapa.setView(camara);
         rendererMapa.render();  // Dibuja el mapa
@@ -303,6 +315,8 @@ public class PantallaJuego implements Screen
             }
         }
         camara.update();
+        xFondo = camara.position.x - Juego.ANCHO_CAMARA/2;
+        yFondo = camara.position.y - Juego.ALTO_CAMARA/2;
     }
 
     private void actualizar(float delta) {
@@ -450,6 +464,7 @@ public class PantallaJuego implements Screen
         assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
         assetManager.unload("Mapa.tmx");
+        assetManager.unload("nubes.png");
     }
 
     /*
