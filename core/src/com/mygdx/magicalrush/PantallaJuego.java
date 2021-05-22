@@ -333,7 +333,7 @@ public class PantallaJuego implements Screen
             Disparo bolaFuego = arrBolas.get(i);
             bolaFuego.mover(delta);
             //Prueba si la bola debe desaparecer
-            if(bolaFuego.getX()>1280){
+            if(bolaFuego.getX()>=1280 || bolaFuego.getX()<=0){
                 //borrar el objeto
                 arrBolas.removeIndex(i);
             }
@@ -504,9 +504,20 @@ public class PantallaJuego implements Screen
                     //CAMBIAR PROCESADOR
                     Gdx.input.setInputProcessor(escenaPausa);
                 }else if (btnDisp.contiene(x,y)){
-                    //Dispara
-                    Disparo bolaFuego = new Disparo(texturaBola,rui.getSprite().getX()+40,rui.getSprite().getY()+10);
-                    arrBolas.add(bolaFuego);
+                    //Dispara hacia la derecha si esta viendo en esa dirección
+                    if(rui.getLRight() == true)
+                    {
+                        Disparo bolaFuego = new Disparo(texturaBola,rui.getSprite().getX()+40,rui.getSprite().getY()+10);
+                        bolaFuego.setRight(rui.getLRight());
+                        arrBolas.add(bolaFuego);
+                    }
+                    //Dispara hacia la izquierda si esta viendo en esa dirección
+                    if(rui.getLRight() == false)
+                    {
+                        Disparo bolaFuego = new Disparo(texturaBola,rui.getSprite().getX()-20,rui.getSprite().getY()+10);
+                        bolaFuego.setRight(rui.getLRight());
+                        arrBolas.add(bolaFuego);
+                    }
                 }
             } else if (estadoJuego==EstadosJuego.GANO) {
                 if (btnGana.contiene(x,y)) {

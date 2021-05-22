@@ -17,7 +17,7 @@ public class Personaje
     // Animación
     private Animation animacionCaminando;    // Caminando
     private float timerAnimacion;   // tiempo para calcular el frame
-    public boolean lRight = true;
+    public boolean lRight = true; //Esta viendo hacia la derecha
 
     // Estados del personaje
     private EstadoMovimiento estadoMovimiento;
@@ -53,7 +53,6 @@ public class Personaje
 
     // Dibuja el personaje
     public void render(SpriteBatch batch) {
-        System.out.println("Derecha: "+lRight);
         // Dibuja el personaje dependiendo del estadoMovimiento
         switch (estadoMovimiento) {
             case MOV_DERECHA:
@@ -82,6 +81,7 @@ public class Personaje
                 break;
             case INICIANDO:
             case QUIETO:
+                //El personaje mira en la ultima dirección a la que camino
                 TextureRegion regionq = (TextureRegion) sprite;
                 if (estadoMovimiento==EstadoMovimiento.QUIETO && lRight == false)
                 {
@@ -150,6 +150,10 @@ public class Personaje
     // Accesor de la variable sprite
     public Sprite getSprite() {
         return sprite;
+    }
+
+    public boolean getLRight(){
+        return lRight;
     }
 
     // Accesores para la posición
