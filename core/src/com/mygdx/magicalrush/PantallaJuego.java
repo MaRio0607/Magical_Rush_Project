@@ -410,10 +410,9 @@ public class PantallaJuego implements Screen
 
         float px = rui.getX();    // Posición actual
         // Posición después de actualizar
-        px = rui.getEstadoMovimiento()==Personaje.EstadoMovimiento.MOV_DERECHA? px+Personaje.VELOCIDAD_X+35:
-                px-Personaje.VELOCIDAD_X;
+        px = estado==Personaje.EstadoMovimiento.MOV_DERECHA? px+Personaje.VELOCIDAD_X+35: px-Personaje.VELOCIDAD_X+20;
         int celdaX = (int)(px/TAM_CELDA);   // Casilla del personaje en X
-        if (rui.getEstadoMovimiento()== Personaje.EstadoMovimiento.MOV_DERECHA) {
+        if (estado== Personaje.EstadoMovimiento.MOV_DERECHA) {
             celdaX++;   // Casilla del lado derecho
         }
         int celdaY = (int)(rui.getY()/TAM_CELDA); // Casilla del personaje en Y
