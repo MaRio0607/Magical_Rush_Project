@@ -4,17 +4,29 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Disparo extends Objeto{
     private float vX=350;
+    private boolean Right;
 
     public Disparo(Texture texture, float x, float y){
         super(texture,x,y);
     }
 
-    //Mover a la dercha la bola de fuego
+    //Mover el disparo
     public void  mover(float delta){
-        float dx=vX*delta;
-        sprite.setX(sprite.getX()+dx);
+        //El personaje esta apuntando a la derecha
+        if(Right==true)
+        {
+            float dx=vX*delta;
+            sprite.setX(sprite.getX()+dx);
+        }
+        //El personaje esta apuntando a la izquierda
+        if(Right==false)
+        {
+            float dx=vX*delta;
+            sprite.setX(sprite.getX()-dx);
+        }
     }
 
+    public void setRight(boolean right){Right = right;}
 
     public float getX() {
         return sprite.getX();

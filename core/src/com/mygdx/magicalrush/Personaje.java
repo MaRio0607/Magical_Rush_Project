@@ -17,6 +17,7 @@ public class Personaje
     // Animación
     private Animation animacionCaminando;    // Caminando
     private float timerAnimacion;   // tiempo para calcular el frame
+    public boolean lRight = true; //Esta viendo hacia la derecha
 
     // Estados del personaje
     private EstadoMovimiento estadoMovimiento;
@@ -64,17 +65,38 @@ public class Personaje
                 if (estadoMovimiento==EstadoMovimiento.MOV_IZQUIERDA) {
                     if (!region.isFlipX()) {
                         region.flip(true,false);
-                    }
-                } else {
-                    if (region.isFlipX()) {
-                        region.flip(true,false);
+                        lRight=false;
                     }
                 }
+                if (estadoMovimiento==EstadoMovimiento.MOV_DERECHA) {
+                    if (region.isFlipX()) {
+                        region.flip(true,false);
+                        lRight=true;
+                    }
+                }
+
+
                 // Dibuja el frame en las coordenadas del sprite
                 batch.draw(region, sprite.getX(), sprite.getY());
                 break;
             case INICIANDO:
             case QUIETO:
+                //El personaje mira en la ultima dirección a la que camino
+                TextureRegion regionq = (TextureRegion) sprite;
+                if (estadoMovimiento==EstadoMovimiento.QUIETO && lRight == false)
+                {
+                    if (!regionq.isFlipX()) {
+                        regionq.flip(true,false);
+                        lRight=false;
+                    }
+                }
+                if (estadoMovimiento==EstadoMovimiento.QUIETO && lRight == true)
+                {
+                    if (regionq.isFlipX()) {
+                        regionq.flip(true,false);
+                        lRight=true;
+                    }
+                }
                 sprite.draw(batch); // Dibuja el sprite
                 break;
         }
@@ -128,6 +150,10 @@ public class Personaje
     // Accesor de la variable sprite
     public Sprite getSprite() {
         return sprite;
+    }
+
+    public boolean getLRight(){
+        return lRight;
     }
 
     // Accesores para la posición
