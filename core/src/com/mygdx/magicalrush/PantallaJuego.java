@@ -406,6 +406,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         //Verifica si esta dentro de las x de alguno de los rectangulos
         //En caso de que si checa cual es el mas cercano a el personaje debajo de este
         //Ese rectangulo es con el que se maneja la gravedad
+        //verifica cuales son los rectangulos mas cercanos a su izquierda y derecha
+        //y bloquea al jugador cuando llega a la coordenada mas cercana
         for (int i=0; i<arrHitbox.size; i++){
             Rectangle r = arrHitbox.get(i);
             if(rui.getX() >= r.getX() && rui.getX()+52 < (r.getX()+r.getWidth()+52) )
@@ -439,7 +441,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         reS = 0;
         reM = 1600;
         reI = 1600;
-        System.out.println(ri);
         Rectangle r = arrHitbox.get(re);
         Rectangle rem = arrHitbox.get(rm);
         Rectangle rei = arrHitbox.get(ri);
@@ -465,7 +466,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         {
             rui.setCR(true);
         }
-        if( rui.getX()-10 <= ((rei.getX() + rei.getWidth())+5) )
+        if( rui.getX()-10 <= ((rei.getX() + rei.getWidth())+5) && (rui.getY()+70 < rei.getY()))
         {
             rui.setCL(false);
         }
