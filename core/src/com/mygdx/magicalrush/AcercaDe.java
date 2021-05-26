@@ -65,7 +65,7 @@ public class AcercaDe implements Screen
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
 
         assetManager.load("fondo_A.png", Texture.class);    // Cargar imagen
-        assetManager.load("regresar.png", Texture.class);
+        assetManager.load("vol_BOT.png", Texture.class);
         // Texturas de los botones
 
         // Se bloquea hasta que cargue todos los recursos
@@ -76,7 +76,7 @@ public class AcercaDe implements Screen
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
         // Carga el mapa en memoria
         texturaAcercaDe = assetManager.get("fondo_A.png");
-        texturaRegresar = assetManager.get("regresar.png");
+        texturaRegresar = assetManager.get("vol_BOT.png");
 
         btnRegresar = new Boton(texturaRegresar);
     }
@@ -132,7 +132,7 @@ public class AcercaDe implements Screen
         // Los assets se liberan a través del assetManager
         AssetManager assetManager = juego.getAssetManager();
         assetManager.unload("fondo_A.png");
-        assetManager.unload("regresar.png");
+        assetManager.unload("vol_BOT.png");
     }
 
     /*
