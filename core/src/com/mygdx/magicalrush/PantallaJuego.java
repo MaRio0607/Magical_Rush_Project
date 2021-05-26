@@ -89,7 +89,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     //Escenario Hitbox
     private int re;
+    private int rm;
+    private int ri;
+    private float reI;
     private float reS;
+    private float reM;
 
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
@@ -132,11 +136,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         Gdx.input.setInputProcessor(procesadorEntrada);
 
         //Dibuja rectangulos que son usados para hitboxes
-        r1 = new Rectangle(0, 800, 604, 500);
-        r2 = new Rectangle(280, 849, 388, 175);
-        r3 = new Rectangle(604, 674, 418, 400);
+        r1 = new Rectangle(0, 800, 604, 800);
+        r2 = new Rectangle(280, 849, 398, 175);
+        r3 = new Rectangle(604, 674, 418, 150);
         r4 = new Rectangle(604,384,584,100);
-        r5 = new Rectangle(1188, 674, 413, 300);
+        r5 = new Rectangle(1188, 674, 413, 674);
 
     }
     private void crearBolas() {
@@ -177,7 +181,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
         re = 0;
+        rm = 0;
+        ri = 0;
+        reI =1600;
         reS = 0;
+        reM = 1600;
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
@@ -387,7 +395,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     // Prueba si esta chocando con las paredes
     private void probarChoqueParedes() {
-        System.out.println("Rui: (" + rui.getX()+52 + ", " + (rui.getY()+64) + ", " + rui.getY() + ")");
+        System.out.println("Rui: (" + (rui.getX()) + ", " + (rui.getY()+64) + ", " + rui.getY() + ")");
         //Agregar los rectangulos del mapa al array
         arrHitbox=new Array<>();
         arrHitbox.add(r1);
@@ -408,9 +416,33 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     re = i;
                 }
             }
+            if((rui.getX()+7) < r.getX())
+            {
+                if((r.getX() < reM))
+                {
+                    reM = r.getX();
+                    rm = i;
+                }
+            }
+            if( (r.getX()+r.getWidth()) < rui.getX() )
+            {
+                if( ((rui.getY()+64) <= r.getY()) && ((rui.getY()+70) >= (r.getY()-r.getHeight())) )
+                {
+                    if( ((rui.getX()) - (r.getX()+r.getWidth())) < reI)
+                    {
+                        reI = ((r.getX()+r.getWidth()));
+                        ri = i;
+                    }
+                }
+            }
         }
         reS = 0;
+        reM = 1600;
+        reI = 1600;
+        System.out.println(ri);
         Rectangle r = arrHitbox.get(re);
+        Rectangle rem = arrHitbox.get(rm);
+        Rectangle rei = arrHitbox.get(ri);
         if(rui.getY()+64 <= r.getY() && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
         {
             rui.setEstadoSalto(Personaje.EstadoSalto.EN_PISO);
@@ -418,6 +450,27 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         if( rui.getY() + 64 > r.getY() && ( rui.getX() >= r.getX() && rui.getX() <= (r.getX()+r.getWidth()+52) ) && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
         {
             rui.setEstadoSalto(Personaje.EstadoSalto.BAJANDO);
+        }
+        if( rui.getX()+1 >= rem.getX()-10 )
+        {
+            if (rem.getY() > (rui.getY()+64))
+            {
+                rui.setCR(false);
+            }
+            else{
+                rui.setCR(true);
+            }
+        }
+        else
+        {
+            rui.setCR(true);
+        }
+        if( rui.getX()-10 <= ((rei.getX() + rei.getWidth())+5) )
+        {
+            rui.setCL(false);
+        }
+        else{
+            rui.setCL(true);
         }
     }
 
