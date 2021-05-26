@@ -1,4 +1,4 @@
-package com.mygdx.magicalrush;
+    package com.mygdx.magicalrush;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,7 +27,8 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class PantallaJuego implements Screen
+
+    public class PantallaJuego implements Screen
 {
     public static final float ANCHO_MAPA = 1600;   // Ancho del mapa en pixeles
     public static final float ALTO_MAPA = 1100;    // Alto del mapa en pixeles
@@ -49,7 +51,6 @@ public class PantallaJuego implements Screen
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
     private Personaje rui;
     public static final int TAM_CELDA = 16;
-    public static final int TAM_RUI = 60;
 
     //Disparo del personaje
     private Array<Disparo> arrBolas;
@@ -86,10 +87,9 @@ public class PantallaJuego implements Screen
     // Estados del juego
     private EstadosJuego estadoJuego=EstadosJuego.JUGANDO;
 
-    //hitbox
-    Rectangle SlimeHitbox;
-    Rectangle RuiHitbox;
-    float x,y;
+    //Escenario Hitbox
+    private Array<Rectangle> arrHitbox;
+    private Rectangle r1 , r2, r3, r4, r5;
 
     // Fondo
     private Texture texturaNubes;
@@ -127,6 +127,11 @@ public class PantallaJuego implements Screen
         //poner input procesor
         procesadorEntrada=new ProcesadorEntrada();
         Gdx.input.setInputProcessor(procesadorEntrada);
+
+        //Dibuja rectangulos que son usados para hitboxes
+        r1 = new Rectangle(0, 800, 604, 800);
+        r2 = new Rectangle(604, 384, 1240, 416);
+        r3 = new Rectangle(1198, 380, 410, 600);
 
     }
     private void crearBolas() {
@@ -168,7 +173,9 @@ public class PantallaJuego implements Screen
         rui = new Personaje(texturaPersonaje);
 
         // Posición inicial del personaje
-        rui.getSprite().setPosition(Juego.ANCHO_CAMARA / 10, Juego.ALTO_CAMARA * 1.01f);
+        rui.setPosicion(rui.getX(),900);
+        rui.setCL(true);
+        rui.setCR(true);
 
         // Crear los botones
         texturaBtnIzquierda = assetManager.get("izquierda.png");
@@ -190,6 +197,8 @@ public class PantallaJuego implements Screen
         texturePausa = assetManager.get("PausaBoton.png");
         btnPausa = new Boton(texturePausa);
         btnPausa.setPosicion(ANCHO_MAPA/2+400, ALTO_MAPA/2+100);
+
+
         //btnSalto.setAlfa(0.7f);
         // Gana
         //texturaGana = assetManager.get("archivo.png");
@@ -197,10 +206,6 @@ public class PantallaJuego implements Screen
         //btnGana.setPosicion(Juego.ANCHO_CAMARA/2-btnGana.getRectColision().width/2,
                 //Juego.ALTO_CAMARA/2-btnGana.getRectColision().height/2);
         //btnGana.setAlfa(0.7f);}
-
-        //hitboxes
-        RuiHitbox=new Rectangle(x,y,70,70);
-        SlimeHitbox=new Rectangle(x,y,58,58);
 
     }
 
@@ -217,6 +222,7 @@ public class PantallaJuego implements Screen
             // Actualizar objetos en la pantalla
             moverPersonaje();
             actualizarCamara(); // Mover la cámara para que siga al personaje
+            probarChoqueParedes();
         }
 
         // Dibujar
@@ -229,6 +235,9 @@ public class PantallaJuego implements Screen
         batch.begin();
         batch.draw(texturaNubes, xFondo, yFondo);
         batch.end();
+
+
+
 
         rendererMapa.setView(camara);
         rendererMapa.render();  // Dibuja el mapa
@@ -263,9 +272,6 @@ public class PantallaJuego implements Screen
         if(estadoJuego==EstadosJuego.PAUSADO && escenaPausa !=null){
             escenaPausa.draw();
         }
-        //HITBOXES DEL PERSONAJE
-        RuiHitbox.setPosition(x,y);
-        System.out.println(RuiHitbox.overlaps(SlimeHitbox));
 
     }
 
@@ -333,12 +339,13 @@ public class PantallaJuego implements Screen
             Disparo bolaFuego = arrBolas.get(i);
             bolaFuego.mover(delta);
             //Prueba si la bola debe desaparecer
-            if(bolaFuego.getX()>=1280 || bolaFuego.getX()<=0){
+            if(bolaFuego.getX()>=ANCHO_MAPA || bolaFuego.getX()<=0){
                 //borrar el objeto
                 arrBolas.removeIndex(i);
             }
         }
     }
+
 
     /*
     Movimiento del personaje.
@@ -346,84 +353,73 @@ public class PantallaJuego implements Screen
     private void moverPersonaje() {
         // Prueba caída libre inicial o movimiento horizontal
         switch (rui.getEstadoMovimiento()) {
-            case INICIANDO:     // Mueve el personaje en Y hasta que se encuentre sobre un bloque
-                // Los bloques en el mapa son de 16x16
-                // Calcula la celda donde estaría después de moverlo
-                int celdaX = (int)(rui.getX()/ TAM_CELDA);
-                int celdaY = (int)((rui.getY()+ rui.VELOCIDAD_Y)/ TAM_CELDA);
-                // Recuperamos la celda en esta posición
-                // La capa 0 es el fondo
-                TiledMapTileLayer capa = (TiledMapTileLayer)mapa.getLayers().get(1);
-                TiledMapTileLayer.Cell celda = capa.getCell(celdaX, celdaY);
-                // probar si la celda está ocupada
-                if (celda==null) {
-                    // Celda vacía, entonces el personaje puede avanzar
-                    rui.caer();
-                }  else {
-                    // Dejarlo sobre la celda que lo detiene
-                    rui.setPosicion(rui.getX(), (celdaY + 1) * TAM_CELDA);
-                    rui.setEstadoMovimiento(Personaje.EstadoMovimiento.QUIETO);
-                }
+            case INICIANDO:
+                rui.setEstadoMovimiento(Personaje.EstadoMovimiento.QUIETO);
                 break;
-            case MOV_DERECHA:       // Se mueve horizontal
+            case MOV_DERECHA:
+                rui.actualizar();
+                break;
             case MOV_IZQUIERDA:
-                probarChoqueParedes();      // Prueba si debe moverse
+                rui.actualizar();
                 break;
-        }
-
-        // Prueba si debe caer por llegar a un espacio vacío
-        if ( rui.getEstadoMovimiento()!= Personaje.EstadoMovimiento.INICIANDO
-                && (rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO) ) {
-            // Calcula la celda donde estaría después de moverlo
-            int celdaX = (int) (rui.getX() / TAM_CELDA);
-            int celdaY = (int) ((rui.getY() + rui.VELOCIDAD_Y) / TAM_CELDA);
-            // Recuperamos la celda en esta posición
-            // La capa 0 es el fondo
-            TiledMapTileLayer capa = (TiledMapTileLayer) mapa.getLayers().get(1);
-            TiledMapTileLayer.Cell celdaAbajo = capa.getCell(celdaX, celdaY);
-            TiledMapTileLayer.Cell celdaDerecha = capa.getCell(celdaX+1, celdaY);
-            // probar si la celda está ocupada
-            if ( (celdaAbajo==null && celdaDerecha==null)  ) {
-                // Celda vacía, entonces el personaje puede avanzar
-                rui.caer();
-                rui.setEstadoSalto(Personaje.EstadoSalto.CAIDA_LIBRE);
-            } else {
-                // Dejarlo sobre la celda que lo detiene
-                rui.setPosicion(rui.getX(), (celdaY + 1) * TAM_CELDA);
-                rui.setEstadoSalto(Personaje.EstadoSalto.EN_PISO);
-            }
         }
 
         // Saltar
         switch (rui.getEstadoSalto()) {
+            case EN_PISO:
+                break;
             case SUBIENDO:
+                rui.actualizarSalto();
+                break;
             case BAJANDO:
-                rui.actualizarSalto();    // Actualizar posición en 'y'
+                rui.caer();
                 break;
         }
     }
 
 
-    // Prueba si puede moverse a la izquierda o derecha
+    // Prueba si esta chocando con las paredes
     private void probarChoqueParedes() {
-        Personaje.EstadoMovimiento estado = rui.getEstadoMovimiento();
+        //System.out.println("Rui: (" + rui.getX() + ", " + rui.getY()+64 + ") R3: (x: " + r3.getX() + ", y: " + r3.getY() + ", width: " + r3.getWidth() + ", height: " + r3.getHeight()+")" );
 
-        float px = rui.getX();    // Posición actual
-        // Posición después de actualizar
-        px = estado==Personaje.EstadoMovimiento.MOV_DERECHA? px+Personaje.VELOCIDAD_X+35: px-Personaje.VELOCIDAD_X+20;
-        int celdaX = (int)(px/TAM_CELDA);   // Casilla del personaje en X
-        if (estado== Personaje.EstadoMovimiento.MOV_DERECHA) {
-            celdaX++;   // Casilla del lado derecho
-        }
-        int celdaY = (int)(rui.getY()/TAM_CELDA); // Casilla del personaje en Y
+        arrHitbox=new Array<>();
+        arrHitbox.add(r1);
+        arrHitbox.add(r2);
+        arrHitbox.add(r3);
+        for (int i=0; i<arrHitbox.size; i++){
+            Rectangle r = arrHitbox.get(i);
+            if(rui.getY()+64 <= r.getY() && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
+            {
+                rui.setEstadoSalto(Personaje.EstadoSalto.EN_PISO);
+            }
+            if( rui.getY() + 64 > r.getY() && ( rui.getX() >= r.getX() && rui.getX() <= r.getWidth() ) && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
+            {
+                rui.setEstadoSalto(Personaje.EstadoSalto.BAJANDO);
+            }
+            if(rui.getX() > r.getWidth() && rui.getY()+64 > (r.getY()-r.getHeight()) && rui.getY()+64 < r.getY())
+            {
+                if (rui.getX()<=r.getWidth()+10)
+                {
+                    //Rui no se puede mover a la izquierda
+                    rui.setCL(false);
+                }
+                else {
+                    rui.setCL(true);
+                }
+            }
+            if((rui.getX()>r.getX()-10)  && rui.getX() < r.getX() && rui.getY()+64 > (r.getY()-r.getHeight()) && rui.getY() < r.getY())
+            {
+                if (rui.getX()>=r.getWidth()-10)
+                {
+                    //Rui no se puede mover a la izquierda
+                    rui.setCR(false);
+                }
+                else {
+                    rui.setCR(true);
+                }
+            }
 
-        TiledMapTileLayer capaPlataforma = (TiledMapTileLayer) mapa.getLayers().get(1);
-
-        if ( capaPlataforma.getCell(celdaX,celdaY) != null || capaPlataforma.getCell(celdaX,celdaY+1) != null ) {
-                rui.setEstadoMovimiento(Personaje.EstadoMovimiento.QUIETO);
-        } else {
-            rui.actualizar();
-        }
+         }
     }
 
 
@@ -488,9 +484,11 @@ public class PantallaJuego implements Screen
                 if (btnDerecha.contiene(x, y) && rui.getEstadoMovimiento() != Personaje.EstadoMovimiento.INICIANDO) {
                     // Tocó el botón derecha, hacer que el personaje se mueva a la derecha
                     rui.setEstadoMovimiento(Personaje.EstadoMovimiento.MOV_DERECHA);
+
                 } else if (btnIzquierda.contiene(x, y) && rui.getEstadoMovimiento() != Personaje.EstadoMovimiento.INICIANDO) {
                     // Tocó el botón izquierda, hacer que el personaje se mueva a la izquierda
                     rui.setEstadoMovimiento(Personaje.EstadoMovimiento.MOV_IZQUIERDA);
+
                 } else if (btnSalto.contiene(x, y)) {
                     // Tocó el botón saltar
                     rui.saltar();

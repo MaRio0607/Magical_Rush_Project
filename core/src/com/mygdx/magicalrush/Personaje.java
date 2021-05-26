@@ -31,6 +31,9 @@ public class Personaje
     private float tiempoVuelo;       // Tiempo que estará en el aire
     private float tiempoSalto;      // Tiempo actual de vuelo
 
+    public boolean CL;
+    public boolean CR;
+
     /*
     Constructor del personaje, recibe una imagen con varios frames
      */
@@ -74,8 +77,6 @@ public class Personaje
                         lRight=true;
                     }
                 }
-
-
                 // Dibuja el frame en las coordenadas del sprite
                 batch.draw(region, sprite.getX(), sprite.getY());
                 break;
@@ -111,14 +112,14 @@ public class Personaje
             case MOV_DERECHA:
                 // Prueba que no salga del mundo
                 nuevaX += VELOCIDAD_X;
-                if (nuevaX<=PantallaJuego.ANCHO_MAPA-sprite.getWidth()) {
+                if (nuevaX<=PantallaJuego.ANCHO_MAPA-sprite.getWidth() && CR) {
                     sprite.setX(nuevaX);
                 }
                 break;
             case MOV_IZQUIERDA:
                 // Prueba que no salga del mundo
                 nuevaX -= VELOCIDAD_X;
-                if (nuevaX>=0) {
+                if (nuevaX>=0 && CL) {
                     sprite.setX(nuevaX);
                 }
                 break;
@@ -168,6 +169,11 @@ public class Personaje
     public void setPosicion(float x, int y) {
         sprite.setPosition(x,y);
     }
+
+    public boolean getCL() {return CL;}
+    public void setCL(boolean b) {CL = b;}
+    public boolean getCR() {return CR;}
+    public void setCR(boolean b) {CR = b;}
 
     // Accesor del estadoMovimiento
     public EstadoMovimiento getEstadoMovimiento() {
