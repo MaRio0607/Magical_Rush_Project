@@ -88,6 +88,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private EstadosJuego estadoJuego=EstadosJuego.JUGANDO;
 
     //Escenario Hitbox
+    private int re;
+    private float reS;
+
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
 
@@ -129,9 +132,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         Gdx.input.setInputProcessor(procesadorEntrada);
 
         //Dibuja rectangulos que son usados para hitboxes
-        r1 = new Rectangle(0, 800, 604, 800);
-        r2 = new Rectangle(604, 384, 1240, 416);
-        r3 = new Rectangle(1198, 380, 410, 600);
+        r1 = new Rectangle(0, 800, 604, 500);
+        r2 = new Rectangle(280, 849, 388, 175);
+        r3 = new Rectangle(604, 674, 418, 400);
+        r4 = new Rectangle(604,384,584,100);
+        r5 = new Rectangle(1188, 674, 413, 300);
 
     }
     private void crearBolas() {
@@ -171,6 +176,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
+        re = 0;
+        reS = 0;
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
@@ -380,46 +387,38 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     // Prueba si esta chocando con las paredes
     private void probarChoqueParedes() {
-        //System.out.println("Rui: (" + rui.getX() + ", " + rui.getY()+64 + ") R3: (x: " + r3.getX() + ", y: " + r3.getY() + ", width: " + r3.getWidth() + ", height: " + r3.getHeight()+")" );
-
+        System.out.println("Rui: (" + rui.getX()+52 + ", " + (rui.getY()+64) + ", " + rui.getY() + ")");
+        //Agregar los rectangulos del mapa al array
         arrHitbox=new Array<>();
         arrHitbox.add(r1);
         arrHitbox.add(r2);
         arrHitbox.add(r3);
+        arrHitbox.add(r4);
+        arrHitbox.add(r5);
+        //Verifica si esta dentro de las x de alguno de los rectangulos
+        //En caso de que si checa cual es el mas cercano a el personaje debajo de este
+        //Ese rectangulo es con el que se maneja la gravedad
         for (int i=0; i<arrHitbox.size; i++){
             Rectangle r = arrHitbox.get(i);
-            if(rui.getY()+64 <= r.getY() && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
+            if(rui.getX() >= r.getX() && rui.getX()+52 < (r.getX()+r.getWidth()+52) )
             {
-                rui.setEstadoSalto(Personaje.EstadoSalto.EN_PISO);
-            }
-            if( rui.getY() + 64 > r.getY() && ( rui.getX() >= r.getX() && rui.getX() <= r.getWidth() ) && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
-            {
-                rui.setEstadoSalto(Personaje.EstadoSalto.BAJANDO);
-            }
-            if(rui.getX() > r.getWidth() && rui.getY()+64 > (r.getY()-r.getHeight()) && rui.getY()+64 < r.getY())
-            {
-                if (rui.getX()<=r.getWidth()+10)
+                if (r.getY() >= reS && (r.getY() < (rui.getY()+70)))
                 {
-                    //Rui no se puede mover a la izquierda
-                    rui.setCL(false);
-                }
-                else {
-                    rui.setCL(true);
+                    reS = r.getY();
+                    re = i;
                 }
             }
-            if((rui.getX()>r.getX()-10)  && rui.getX() < r.getX() && rui.getY()+64 > (r.getY()-r.getHeight()) && rui.getY() < r.getY())
-            {
-                if (rui.getX()>=r.getWidth()-10)
-                {
-                    //Rui no se puede mover a la izquierda
-                    rui.setCR(false);
-                }
-                else {
-                    rui.setCR(true);
-                }
-            }
-
-         }
+        }
+        reS = 0;
+        Rectangle r = arrHitbox.get(re);
+        if(rui.getY()+64 <= r.getY() && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
+        {
+            rui.setEstadoSalto(Personaje.EstadoSalto.EN_PISO);
+        }
+        if( rui.getY() + 64 > r.getY() && ( rui.getX() >= r.getX() && rui.getX() <= (r.getX()+r.getWidth()+52) ) && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
+        {
+            rui.setEstadoSalto(Personaje.EstadoSalto.BAJANDO);
+        }
     }
 
 
