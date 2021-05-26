@@ -629,7 +629,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
             Button btn = new Button(trd);
             addActor(btn);
-            btn.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+400));
+            btn.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+275));
+            //boton menu
+            Texture textureBtn2=new Texture("Cont_bot5.png");
+            TextureRegionDrawable trd2 = new TextureRegionDrawable(textureBtn2);
+            Button btn2 = new Button(trd2);
+            addActor(btn2);
+            btn2.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+375));
+            //boton reiniciar
+            Texture textureBtn3=new Texture("Cont_bot3.png");
+            TextureRegionDrawable trd3 = new TextureRegionDrawable(textureBtn3);
+            Button btn3 = new Button(trd3);
+            addActor(btn3);
+            btn3.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+475));
+            //listener continuar
             btn.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -639,6 +652,25 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     Gdx.input.setInputProcessor(procesadorEntrada);
                 }
             });
+            btn2.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    //Ir a menu
+                    juego.setScreen(new Menu(juego));
+                    Gdx.input.setInputProcessor(procesadorEntrada);
+                }
+            });
+            btn3.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    //reiniciar juego
+                    juego.setScreen(new PantallaCargando(juego));
+                    Gdx.input.setInputProcessor(procesadorEntrada);
+                }
+            });
+
         }
 
     }
