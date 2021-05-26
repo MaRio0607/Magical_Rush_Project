@@ -441,7 +441,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         reS = 0;
         reM = 1600;
         reI = 1600;
-        System.out.println(ri);
         Rectangle r = arrHitbox.get(re);
         Rectangle rem = arrHitbox.get(rm);
         Rectangle rei = arrHitbox.get(ri);
@@ -467,13 +466,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         {
             rui.setCR(true);
         }
-        if( rui.getX()-10 <= ((rei.getX() + rei.getWidth())+5) )
+        if( rui.getX()-10 <= ((rei.getX() + rei.getWidth())+5) && (rui.getY()+70 < rei.getY()))
         {
             rui.setCL(false);
-        }
-        if(rui.getY() > rei.getY())
-        {
-            rui.setCL(true);
         }
         else{
             rui.setCL(true);
