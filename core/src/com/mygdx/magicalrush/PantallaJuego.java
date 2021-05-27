@@ -75,6 +75,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture texturaDisp;
     private Boton btnDisp;
 
+    //Botón Continuar
+    private Texture continuar;
+    private Boton btnCont;
 
     // Botón Disparo
     private Texture texturePausa;
@@ -84,8 +87,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture texturaGana;
     private Boton btnGana;
 
-    //PAUSA
-    private EscenaPausa escenaPausa;
     private ProcesadorEntrada procesadorEntrada;
 
     // Estados del juego
@@ -118,6 +119,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture vida0, vida1, vida2,vida3;
     private Texture energia0, energia1, energia2, energia3, energia4, energia5;
     private Texture Llave0, Llave1, Llave2, Llave3;
+
+    //Pausa
+    private Texture pantallaPausa;
 
     // Fondo
     private Texture texturaNubes;
@@ -212,6 +216,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("Llave_2.png", Texture.class);
         assetManager.load("Llave_3.png", Texture.class);
 
+        assetManager.load("btones.png", Texture.class);
+
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
     }
@@ -266,6 +272,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         Llave2 = assetManager.get("Llave_2.png");
         Llave3 = assetManager.get("Llave_3.png");
 
+        pantallaPausa = assetManager.get("btones.png");
+
         key = new Item(keyTexture, 640, 340, 1);
         vida = new Item(vidaTexture, 965, 635, 2);
         energia = new Item(energiaTexture, 250, 750, 3);
@@ -278,6 +286,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         rui.setCR(true);
 
         // Crear los botones
+        continuar = assetManager.get("Cont_bot.png");
+        btnCont = new Boton(continuar);
+
         texturaBtnIzquierda = assetManager.get("izquierda.png");
         btnIzquierda = new Boton(texturaBtnIzquierda);
         btnIzquierda.setPosicion(TAM_CELDA, 5 * TAM_CELDA);
@@ -347,6 +358,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
         UI(batch);
+
         key.render(batch);
         vida.render(batch);
         energia.render(batch);
@@ -373,12 +385,22 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             btnSalto.render(batch);
             btnDisp.render(batch);
             btnPausa.render(batch);
+            pantallaPausa(batch);
         }
         batch.end();
 
-        if(estadoJuego==EstadosJuego.PAUSADO && escenaPausa !=null){
-            escenaPausa.draw();
+
+
+    }
+
+    private void pantallaPausa(SpriteBatch batch) {
+        if(estadoJuego == EstadosJuego.PAUSADO)
+        {
+            batch.draw(pantallaPausa, (camara.position.x-(Juego.ANCHO_CAMARA/4)+85), camara.position.y+(Juego.ALTO_CAMARA/2)-940);
+            btnCont.setPosicion((camara.position.x-(Juego.ANCHO_CAMARA/4)+190), camara.position.y+(Juego.ALTO_CAMARA/2)-700);
+            btnCont.render(batch);
         }
+
 
     }
 
@@ -538,8 +560,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private void actualizar(float delta) {
         if (estadoJuego==EstadosJuego.JUGANDO){
-           // actualizarFondo();
-           // actualizarGoombas(delta);
             actualizarDisparo(delta);
         }
 
@@ -738,6 +758,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("Llave_2.png");
         assetManager.unload("Llave_3.png");
 
+        assetManager.unload("btones.png");
+
     }
 
     /*
@@ -772,14 +794,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     // Tocó el botón saltar
                     rui.saltar();
                 } else if ((btnPausa.contiene(x, y))) {
-
-                    if (escenaPausa==null){//INICIALIZACION LAZY
-                        escenaPausa=new EscenaPausa(vista);
-
-                    }
                     estadoJuego=EstadosJuego.PAUSADO;
-                    //CAMBIAR PROCESADOR
-                    Gdx.input.setInputProcessor(escenaPausa);
                 }else if (btnDisp.contiene(x,y)){
                     //Dispara hacia la derecha si esta viendo en esa dirección
                     if(rui.getLRight() == true)
@@ -796,10 +811,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                         arrBolas.add(bolaFuego);
                     }
                 }
+            } else if (estadoJuego ==EstadosJuego.PAUSADO){
+                if(btnCont.contiene(x,y)){
+                    estadoJuego=EstadosJuego.JUGANDO;
+                }
             } else if (estadoJuego==EstadosJuego.GANO) {
                 if (btnGana.contiene(x,y)) {
                     Gdx.app.exit();
                 }
+
             }
             return true;    // Indica que ya procesó el evento
         }
@@ -841,35 +861,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             y = coordenadas.y;
         }
     }
-    private class EscenaPausa extends Stage {
 
-        private Texture textureFondo;
-        public  EscenaPausa(Viewport vista){
-            super(vista);//pasa la vista al constructor stage
-
-
-            textureFondo=new Texture("btones.png");
-            Image imgeFondo=new Image(textureFondo);
-            imgeFondo.setPosition(1280/2,720/2+400, Align.center);
-            addActor(imgeFondo);
-            //Boton continuar
-            Texture textureBtn=new Texture("Cont_bot.png");
-            TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
-            Button btn = new Button(trd);
-            addActor(btn);
-            btn.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+400));
-            btn.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
-                    //QUITAR Pausa
-                    estadoJuego=EstadosJuego.JUGANDO;
-                    Gdx.input.setInputProcessor(procesadorEntrada);
-                }
-            });
-        }
-
-    }
     public enum EstadosJuego {
         GANO,
         JUGANDO,
