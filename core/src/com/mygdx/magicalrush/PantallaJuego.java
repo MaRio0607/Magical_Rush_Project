@@ -92,10 +92,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture texturePausa;
     private Boton btnPausa;
 
-    // Fin del juego, Gana o pierde
-    private Texture texturaGana;
-    private Boton btnGana;
-
     private ProcesadorEntrada procesadorEntrada;
 
     // Estados del juego
@@ -113,12 +109,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture keyTexture;
     private Texture vidaTexture;
     private Texture energiaTexture;
+    private Texture puertaTexture;
 
     private Array<Item> arrItem;
     private Item key;
     private Item vida;
     private Item energia;
+    private Item puerta;
     private int keyCount;
+    private int keyNeed;
 
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
@@ -209,6 +208,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("Key_Item.png", Texture.class);
         assetManager.load("Vida_Item.png", Texture.class);
         assetManager.load("Energia_Item.png", Texture.class);
+        assetManager.load("puerta.png", Texture.class);
 
         assetManager.load("Vida_0.png", Texture.class);
         assetManager.load("Vida_1.png", Texture.class);
@@ -257,14 +257,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         reS = 0;
         reM = 1600;
 
-        rui.setVida(3);
+        rui.setVida(2);
         rui.setEnergia(0);
         keyCount=0;
+        keyNeed=1;
 
         //ITEM
         keyTexture = assetManager.get("Key_Item.png");
         vidaTexture = assetManager.get("Vida_Item.png");
         energiaTexture = assetManager.get("Energia_Item.png");
+        puertaTexture = assetManager.get("puerta.png");
 
         vida0 = assetManager.get("Vida_0.png");
         vida1 = assetManager.get("Vida_1.png");
@@ -289,6 +291,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         key = new Item(keyTexture, 640, 340, 1);
         vida = new Item(vidaTexture, 965, 635, 2);
         energia = new Item(energiaTexture, 250, 750, 3);
+        puerta = new Item(puertaTexture, 1412,608,4);
 
         keyCount = 0;
 
@@ -327,18 +330,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         btnPausa = new Boton(texturePausa);
         btnPausa.setPosicion(ANCHO_MAPA/2+400, ALTO_MAPA/2+100);
 
-
-        //btnSalto.setAlfa(0.7f);
-        // Gana
-        //texturaGana = assetManager.get("archivo.png");
-        //btnGana = new Boton(texturaGana);
-        //btnGana.setPosicion(Juego.ANCHO_CAMARA/2-btnGana.getRectColision().width/2,
-                //Juego.ALTO_CAMARA/2-btnGana.getRectColision().height/2);
-        //btnGana.setAlfa(0.7f);}
-
     }
-
-
 
     /*
     Dibuja TODOS los elementos del juego en la pantalla.
@@ -378,6 +370,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         key.render(batch);
         vida.render(batch);
         energia.render(batch);
+        puerta.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
 
@@ -394,7 +387,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         // ¿Ya ganó?
         if (estadoJuego==EstadosJuego.GANO) {
-            btnGana.render(batch);
+            pantallaGana(batch);
         } else {
             btnIzquierda.render(batch);
             btnDerecha.render(batch);
@@ -405,7 +398,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         }
         batch.end();
 
+    }
 
+    private void pantallaGana(SpriteBatch batch) {
+
+        System.out.println("GANASTE PAPASiTO");
 
     }
 
@@ -486,6 +483,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         arrItem.add(key);
         arrItem.add(vida);
         arrItem.add(energia);
+        arrItem.add(puerta);
         for (int i=0; i<arrItem.size; i++) {
             Item it = arrItem.get(i);
             if( ((rui.getX()+52) >= it.getX()) && ((rui.getX() < it.getX()+30)) )
@@ -495,17 +493,26 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     if(it.getTipo() == 1)
                     {
                         keyCount ++;
+                        it.setPosicion(-100,it.getY());
+                        arrItem.removeIndex(i);
                     }
                     if(it.getTipo() == 2)
                     {
                         rui.setVida(rui.getVida()+1);
+                        it.setPosicion(-100,it.getY());
+                        arrItem.removeIndex(i);
                     }
                     if(it.getTipo() == 3)
                     {
                         rui.setEnergia(rui.getEnergia()+1);
+                        it.setPosicion(-100,it.getY());
+                        arrItem.removeIndex(i);
                     }
-                    it.setPosicion(-100,it.getY());
-                    arrItem.removeIndex(i);
+                    if( it.getTipo() == 4 && keyCount == keyNeed )
+                    {
+                        estadoJuego = EstadosJuego.GANO;
+                    }
+
                 }
             }
         }
@@ -761,6 +768,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("Key_Item.png");
         assetManager.unload("Vida_Item.png");
         assetManager.unload("Energia_Item.png");
+        assetManager.unload("puerta.png");
 
         assetManager.unload("Vida_0.png");
         assetManager.unload("Vida_1.png");
@@ -843,9 +851,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     estadoJuego=EstadosJuego.JUGANDO;
                 }
             }  else if (estadoJuego==EstadosJuego.GANO) {
-                if (btnGana.contiene(x,y)) {
-                    Gdx.app.exit();
-                }
+
+
             }
             return true;    // Indica que ya procesó el evento
         }
