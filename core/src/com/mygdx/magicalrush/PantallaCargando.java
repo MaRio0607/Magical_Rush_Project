@@ -22,6 +22,9 @@ public class PantallaCargando implements Screen
     private Viewport vista;
     private SpriteBatch batch;
 
+    // Fondo
+    private Texture textura;
+
     // Imagen cargando
     private Texture texturaCargando;
     private Sprite spriteCargando;
@@ -44,18 +47,26 @@ public class PantallaCargando implements Screen
         batch = new SpriteBatch();
 
         // Cargar recursos
-        assetManager.load("cargando.png", Texture.class);
+        assetManager.load("LOAD.png", Texture.class);
         assetManager.finishLoading();
-        texturaCargando = assetManager.get("cargando.png");
+        texturaCargando = assetManager.get("LOAD.png");
         spriteCargando = new Sprite(texturaCargando);
         spriteCargando.setPosition(Juego.ANCHO_CAMARA / 2 - spriteCargando.getWidth() / 2,
                 Juego.ALTO_CAMARA / 2 - spriteCargando.getHeight() / 2);
 
         cargarRecursos();
+        crearObjetos();
     }
+
 
     // Carga los recursos a través del administrador de assets (siguiente pantalla)
     private void cargarRecursos() {
+        // Cargar las texturas/mapas
+        AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
+
+        assetManager.load("fondo_A.png", Texture.class);    // Cargar imagen
+        // Se bloquea hasta que cargue todos los recursos
+        assetManager.finishLoading();
         Gdx.app.log("cargarRecursos","Iniciando...");
         // Carga los recursos de la siguiente pantalla (PantallaJuego)
         assetManager.load("Mapa.tmx", TiledMap.class);  // Cargar info del mapa
@@ -68,6 +79,11 @@ public class PantallaCargando implements Screen
         //assetManager.load("archivo.png", Texture.class);
 
         Gdx.app.log("cargarRecursos", "Terminando...");
+    }
+    private void crearObjetos() {
+        AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
+        // Carga el mapa en memoria
+        textura = assetManager.get("fondo_A.png");
     }
 
     @Override
@@ -84,6 +100,8 @@ public class PantallaCargando implements Screen
 
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
+        batch.draw(textura, 0, 0);
+
         spriteCargando.draw(batch);
         batch.end();
     }
@@ -129,6 +147,9 @@ public class PantallaCargando implements Screen
     @Override
     public void dispose() {
         texturaCargando.dispose();
+        // Los assets se liberan a través del assetManager
+        AssetManager assetManager = juego.getAssetManager();
+        assetManager.unload("fondo_A.png");
         // Los assets de PantallaJuego se liberan en el método dispose de PantallaJuego
     }
 }

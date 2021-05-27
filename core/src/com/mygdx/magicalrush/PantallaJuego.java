@@ -97,6 +97,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
+    private Rectangle r6, r7, r8, r9, r10, r11;
+    private Rectangle marcador;
 
     // Fondo
     private Texture texturaNubes;
@@ -140,7 +142,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         r2 = new Rectangle(280, 849, 398, 175);
         r3 = new Rectangle(604, 674, 418, 150);
         r4 = new Rectangle(604,384,584,100);
-        r5 = new Rectangle(1188, 674, 413, 674);
+        r5 = new Rectangle(1188, 674, 413, 650);
+
+        r6 = new Rectangle(1022, 560, 81, 10);
+        r7 = new Rectangle(1136, 514, 72, 10);
+        r8 = new Rectangle(1054, 450, 134, 10);
+        r9 = new Rectangle(1136, 610, 72, 10);
+        r10 = new Rectangle(1022, 657, 81, 10);
+        r11 = new Rectangle(1166, 674, 22, 10);
+
+        marcador = new Rectangle(1601, 647, 20, 10);
 
     }
     private void crearBolas() {
@@ -395,7 +406,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     // Prueba si esta chocando con las paredes
     private void probarChoqueParedes() {
-        System.out.println("Rui: (" + (rui.getX()) + ", " + (rui.getY()+64) + ", " + rui.getY() + ")");
         //Agregar los rectangulos del mapa al array
         arrHitbox=new Array<>();
         arrHitbox.add(r1);
@@ -403,6 +413,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         arrHitbox.add(r3);
         arrHitbox.add(r4);
         arrHitbox.add(r5);
+        arrHitbox.add(r6);
+        arrHitbox.add(r7);
+        arrHitbox.add(r8);
+        arrHitbox.add(r9);
+        arrHitbox.add(r10);
+        arrHitbox.add(r11);
+        arrHitbox.add(marcador);
         //Verifica si esta dentro de las x de alguno de los rectangulos
         //En caso de que si checa cual es el mas cercano a el personaje debajo de este
         //Ese rectangulo es con el que se maneja la gravedad
@@ -454,7 +471,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         }
         if( rui.getX()+1 >= rem.getX()-10 )
         {
-            if (rem.getY() > (rui.getY()+64))
+            if (rem.getY() > (rui.getY()+70) && ((rem.getY()-rem.getHeight()) < (rui.getY()+70) ))
             {
                 rui.setCR(false);
             }
