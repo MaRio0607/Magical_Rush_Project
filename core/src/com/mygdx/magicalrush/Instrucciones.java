@@ -74,6 +74,7 @@ public class Instrucciones implements Screen {
         texturaRegresar = assetManager.get("vol_BOT.png");
 
         btnRegresar = new Boton(texturaRegresar);
+        btnRegresar.setPosicion(25,25);
     }
 
     /*
