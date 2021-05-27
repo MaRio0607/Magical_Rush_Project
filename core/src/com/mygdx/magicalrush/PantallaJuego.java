@@ -102,14 +102,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture vidaTexture;
     private Texture energiaTexture;
 
+    private Array<Item> arrItem;
     private Item key;
     private Item vida;
     private Item energia;
+    private int keyCount;
 
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
     private Rectangle r6, r7, r8, r9, r10, r11;
     private Rectangle marcador;
+
+    private Texture vida0, vida1, vida2,vida3;
+    private Texture energia0, energia1, energia2, energia3, energia4, energia5;
 
     // Fondo
     private Texture texturaNubes;
@@ -187,6 +192,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("Vida_Item.png", Texture.class);
         assetManager.load("Energia_Item.png", Texture.class);
 
+        assetManager.load("Vida_0.png", Texture.class);
+        assetManager.load("Vida_1.png", Texture.class);
+        assetManager.load("Vida_2.png", Texture.class);
+        assetManager.load("Vida_3.png", Texture.class);
+
+        assetManager.load("Energia_0.png", Texture.class);
+        assetManager.load("Energia_1.png", Texture.class);
+        assetManager.load("Energia_2.png", Texture.class);
+        assetManager.load("Energia_3.png", Texture.class);
+        assetManager.load("Energia_4.png", Texture.class);
+        assetManager.load("Energia_5.png", Texture.class);
+
+
+
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
     }
@@ -215,14 +234,31 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         reS = 0;
         reM = 1600;
 
+        rui.setVida(3);
+        rui.setEnergia(0);
+
         //ITEM
         keyTexture = assetManager.get("Key_Item.png");
         vidaTexture = assetManager.get("Vida_Item.png");
         energiaTexture = assetManager.get("Energia_Item.png");
 
+        vida0 = assetManager.get("Vida_0.png");
+        vida1 = assetManager.get("Vida_1.png");
+        vida2 = assetManager.get("Vida_2.png");
+        vida3 = assetManager.get("Vida_3.png");
+
+        energia0 = assetManager.get("Energia_0.png");
+        energia1 = assetManager.get("Energia_1.png");
+        energia2 = assetManager.get("Energia_2.png");
+        energia3 = assetManager.get("Energia_3.png");
+        energia4 = assetManager.get("Energia_4.png");
+        energia5 = assetManager.get("Energia_5.png");
+
         key = new Item(keyTexture, 640, 340, 1);
         vida = new Item(vidaTexture, 965, 635, 2);
         energia = new Item(energiaTexture, 250, 750, 3);
+
+        keyCount = 0;
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
@@ -277,6 +313,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             moverPersonaje();
             actualizarCamara(); // Mover la cámara para que siga al personaje
             probarChoqueParedes();
+            actualizarItems();
         }
 
         // Dibujar
@@ -289,6 +326,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         batch.draw(texturaNubes, xFondo, yFondo);
         batch.end();
 
+        stats();
 
 
         rendererMapa.setView(camara);
@@ -296,7 +334,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
-
+        UI(batch);
         key.render(batch);
         vida.render(batch);
         energia.render(batch);
@@ -328,6 +366,92 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         if(estadoJuego==EstadosJuego.PAUSADO && escenaPausa !=null){
             escenaPausa.draw();
+        }
+
+    }
+
+    private void UI(SpriteBatch batch) {
+        switch (rui.getVida()){
+            case 0:
+                batch.draw(vida0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+            case 1:
+                batch.draw(vida1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+            case 2:
+                batch.draw(vida2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+            case 3:
+                batch.draw(vida3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+        }
+
+        switch (rui.getEnergia()){
+            case 0:
+                batch.draw(energia0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 1:
+                batch.draw(energia1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 2:
+                batch.draw(energia2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 3:
+                batch.draw(energia3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 4:
+                batch.draw(energia4, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 5:
+                batch.draw(energia5, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+        }
+
+
+    }
+
+    private void actualizarItems() {
+        arrItem=new Array<>();
+        arrItem.add(key);
+        arrItem.add(vida);
+        arrItem.add(energia);
+
+        System.out.println(rui.getVida() + ", " + rui.getEnergia() + ", " + keyCount);
+        for (int i=0; i<arrItem.size; i++) {
+            Item it = arrItem.get(i);
+            if( ((rui.getX()+52) >= it.getX()) && ((rui.getX() < it.getX()+30)) )
+            {
+                if(((rui.getY()+70) >= it.getY()) && (rui.getY() < it.getY()) )
+                {
+                    if(it.getTipo() == 1)
+                    {
+                        keyCount ++;
+                    }
+                    if(it.getTipo() == 2)
+                    {
+                        rui.setVida(rui.getVida()+1);
+                    }
+                    if(it.getTipo() == 3)
+                    {
+                        rui.setEnergia(rui.getEnergia()+1);
+                    }
+                    it.setPosicion(-100,it.getY());
+                    arrItem.removeIndex(i);
+                }
+            }
+        }
+
+    }
+
+    private void stats(){
+
+        if(rui.getVida() >= 3)
+        {
+            rui.setVida(3);
+        }
+        if(rui.getEnergia() >= 5)
+        {
+            rui.setEnergia(5);
         }
 
     }
@@ -529,7 +653,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         }
     }
 
-
     private void borrarPantalla() {
         Gdx.gl.glClearColor(0.42f, 0.55f, 1, 1);    // r, g, b, alpha
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -571,6 +694,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("Key_Item.png");
         assetManager.unload("Vida_Item.png");
         assetManager.unload("Energia_Item.png");
+
+        assetManager.unload("Vida_0.png");
+        assetManager.unload("Vida_1.png");
+        assetManager.unload("Vida_2.png");
+        assetManager.unload("Vida_3.png");
+
+        assetManager.unload("Energia_0.png");
+        assetManager.unload("Energia_1.png");
+        assetManager.unload("Energia_2.png");
+        assetManager.unload("Energia_3.png");
+        assetManager.unload("Energia_4.png");
+        assetManager.unload("Energia_5.png");
     }
 
     /*
@@ -679,6 +814,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         private Texture textureFondo;
         public  EscenaPausa(Viewport vista){
             super(vista);//pasa la vista al constructor stage
+
+
             textureFondo=new Texture("btones.png");
             Image imgeFondo=new Image(textureFondo);
             imgeFondo.setPosition(1280/2,720/2+400, Align.center);
