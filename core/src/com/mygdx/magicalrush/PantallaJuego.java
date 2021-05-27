@@ -31,7 +31,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 
     public class PantallaJuego implements Screen
-        //qpdo
+
 {
     public static final float ANCHO_MAPA = 1600;   // Ancho del mapa en pixeles
     public static final float ALTO_MAPA = 1100;    // Alto del mapa en pixeles
@@ -79,6 +79,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     //Botón Continuar
     private Texture continuar;
     private Boton btnCont;
+
+    //Botón Menu
+    private Texture menu;
+    private Boton btnMenu;
+
+    //Botón Reiniciar
+    private Texture reiniciar;
+    private Boton btnReiniciar;
 
     // Botón Disparo
     private Texture texturePausa;
@@ -191,6 +199,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("RUIS-Sheet.png",Texture.class);
         assetManager.load("disparo.png", Texture.class);
         assetManager.load("Cont_bot.png",Texture.class);
+        assetManager.load("Cont_bot3.png",Texture.class);
+        assetManager.load("Cont_bot5.png",Texture.class);
         assetManager.load("SHOOT.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("PausaBoton.png",Texture.class);
@@ -275,6 +285,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         pantallaPausa = assetManager.get("btones.png");
 
+
         key = new Item(keyTexture, 640, 340, 1);
         vida = new Item(vidaTexture, 965, 635, 2);
         energia = new Item(energiaTexture, 250, 750, 3);
@@ -289,6 +300,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // Crear los botones
         continuar = assetManager.get("Cont_bot.png");
         btnCont = new Boton(continuar);
+        menu = assetManager.get("Cont_bot5.png");
+        btnMenu = new Boton(menu);
+        reiniciar = assetManager.get("Cont_bot3.png");
+        btnReiniciar = new Boton(reiniciar);
 
         texturaBtnIzquierda = assetManager.get("izquierda.png");
         btnIzquierda = new Boton(texturaBtnIzquierda);
@@ -401,6 +416,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
             btnCont.setPosicion( (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/8) + continuar.getWidth()/3), (pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2) + continuar.getHeight()*4 ) );
             btnCont.render(batch);
+            btnMenu.setPosicion( (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/8) + continuar.getWidth()/3), ((pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2) + continuar.getHeight()*4 ))-180 );
+            btnMenu.render(batch);
+            btnReiniciar.setPosicion( (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/8) + continuar.getWidth()/3), ((pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2) + continuar.getHeight()*4 ))-90 );
+            btnReiniciar.render(batch);
         }
 
 
@@ -816,12 +835,17 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             } else if (estadoJuego ==EstadosJuego.PAUSADO){
                 if(btnCont.contiene(x,y)){
                     estadoJuego=EstadosJuego.JUGANDO;
+                }if(btnMenu.contiene(x,y)){
+                    juego.setScreen(new Menu(juego));
+                    estadoJuego=EstadosJuego.PERDIO;
+                }if(btnReiniciar.contiene(x,y)){
+                    juego.setScreen(new PantallaCargando(juego));
+                    estadoJuego=EstadosJuego.JUGANDO;
                 }
-            } else if (estadoJuego==EstadosJuego.GANO) {
+            }  else if (estadoJuego==EstadosJuego.GANO) {
                 if (btnGana.contiene(x,y)) {
                     Gdx.app.exit();
                 }
-
             }
             return true;    // Indica que ya procesó el evento
         }
