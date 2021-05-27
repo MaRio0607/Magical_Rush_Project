@@ -278,7 +278,7 @@ import javax.xml.soap.Text;
 
         rui.setVida(2);
         rui.setEnergia(0);
-        keyCount=1;
+        keyCount=0;
         keyNeed=1;
 
         //ITEM
