@@ -1,31 +1,29 @@
     package com.mygdx.magicalrush;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+    import com.badlogic.gdx.Gdx;
+    import com.badlogic.gdx.InputAdapter;
+    import com.badlogic.gdx.Screen;
+    import com.badlogic.gdx.assets.AssetManager;
+    import com.badlogic.gdx.graphics.GL20;
+    import com.badlogic.gdx.graphics.OrthographicCamera;
+    import com.badlogic.gdx.graphics.Texture;
+    import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+    import com.badlogic.gdx.maps.tiled.TiledMap;
+    import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+    import com.badlogic.gdx.math.Rectangle;
+    import com.badlogic.gdx.math.Vector3;
+    import com.badlogic.gdx.scenes.scene2d.InputEvent;
+    import com.badlogic.gdx.scenes.scene2d.Stage;
+    import com.badlogic.gdx.scenes.scene2d.ui.Button;
+    import com.badlogic.gdx.scenes.scene2d.ui.Image;
+    import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+    import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+    import com.badlogic.gdx.utils.Align;
+    import com.badlogic.gdx.utils.Array;
+    import com.badlogic.gdx.utils.viewport.StretchViewport;
+    import com.badlogic.gdx.utils.viewport.Viewport;
+
+    import javax.swing.text.View;
 
 
     public class PantallaJuego implements Screen
@@ -49,7 +47,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     // Personaje
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
+    private Texture texturaEnemigo;
     private Personaje rui;
+    private Personaje slime;
     public static final int TAM_CELDA = 16;
 
     //Disparo del personaje
@@ -164,8 +164,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
 
         assetManager.load("RUIS-Sheet.png",Texture.class);
+        assetManager.load("Slime-Sheet.png",Texture.class);
         assetManager.load("disparo.png", Texture.class);
         assetManager.load("Cont_bot.png",Texture.class);
+        assetManager.load("Cont_bot3.png",Texture.class);
+        assetManager.load("Cont_bot5.png",Texture.class);
         assetManager.load("SHOOT.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("PausaBoton.png",Texture.class);
@@ -188,9 +191,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         // Cargar frames
         texturaPersonaje = assetManager.get("RUIS-Sheet.png");
-
+        texturaEnemigo = assetManager.get("Slime-Sheet.png");
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
+        re = 0;
+        rm = 0;
+        ri = 0;
+        reI =1600;
+        reS = 0;
+        reM = 1600;
+
+        //Cargar Enemigo
+        slime=new Personaje(texturaEnemigo);
         re = 0;
         rm = 0;
         ri = 0;
@@ -202,6 +214,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         rui.setPosicion(rui.getX(),900);
         rui.setCL(true);
         rui.setCR(true);
+
+        //Posicion Enemigo
+        slime.setPosicion(1070,900);
+        slime.setCL(true);
+        slime.setCR(true);
 
         // Crear los botones
         texturaBtnIzquierda = assetManager.get("izquierda.png");
@@ -524,6 +541,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // Los assets se liberan a través del assetManager
         AssetManager assetManager = juego.getAssetManager();
         assetManager.unload("RUIS-Sheet.png");
+        assetManager.unload("Slime-Sheet.png");
         assetManager.unload("derecha.png");
         assetManager.unload("salto.png");
         assetManager.unload("disparo.png");
@@ -652,6 +670,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             Texture textureBtn2=new Texture("Cont_bot5.png");
             TextureRegionDrawable trd2 = new TextureRegionDrawable(textureBtn2);
             Button btn2 = new Button(trd2);
+            //btn2.setOnClickListener(new OnClickListener(){
+            //    public void onClick(View view){
+            //        Intent myIntent = new Intent(this,Menu.class);
+            //        startActivity(myIntent);
+            //    }
+            //});
             addActor(btn2);
             btn2.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+375));
             //boton reiniciar
@@ -674,7 +698,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
-                    //Ir a menu
+                    //Menu
                     juego.setScreen(new Menu(juego));
                     Gdx.input.setInputProcessor(procesadorEntrada);
                 }
@@ -692,6 +716,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         }
 
     }
+
     public enum EstadosJuego {
         GANO,
         JUGANDO,
