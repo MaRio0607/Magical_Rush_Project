@@ -29,6 +29,8 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import javax.xml.soap.Text;
+
 
     public class PantallaJuego implements Screen
 
@@ -131,6 +133,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     //Pausa
     private Texture pantallaPausa;
 
+    //Ganar
+    private Texture pantallaGana;
+
+    //Perder
+    private Texture pantallaPierde;
+
+    // Si && No
+    private Texture Si;
+    private Texture No;
+    private Boton btnSi;
+    private Boton btnNo;
+
     // Fondo
     private Texture texturaNubes;
     private float xFondo = 0;
@@ -229,6 +243,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         assetManager.load("btones.png", Texture.class);
 
+        assetManager.load("continuar_nivel.png", Texture.class);
+        assetManager.load("despertaste_continuar.png", Texture.class);
+        assetManager.load("Si.png", Texture.class);
+        assetManager.load("No.png", Texture.class);
+
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
     }
@@ -259,7 +278,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         rui.setVida(2);
         rui.setEnergia(0);
-        keyCount=0;
+        keyCount=1;
         keyNeed=1;
 
         //ITEM
@@ -286,14 +305,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         Llave3 = assetManager.get("Llave_3.png");
 
         pantallaPausa = assetManager.get("btones.png");
+        pantallaGana = assetManager.get("continuar_nivel.png");
+        pantallaPierde = assetManager.get("despertaste_continuar.png");
+        Si = assetManager.get("Si.png");
+        No = assetManager.get("No.png");
 
 
         key = new Item(keyTexture, 640, 340, 1);
         vida = new Item(vidaTexture, 965, 635, 2);
         energia = new Item(energiaTexture, 250, 750, 3);
         puerta = new Item(puertaTexture, 1412,608,4);
-
-        keyCount = 0;
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
@@ -307,6 +328,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         btnMenu = new Boton(menu);
         reiniciar = assetManager.get("Cont_bot3.png");
         btnReiniciar = new Boton(reiniciar);
+        btnSi = new Boton(Si);
+        btnNo = new Boton(No);
 
         texturaBtnIzquierda = assetManager.get("izquierda.png");
         btnIzquierda = new Boton(texturaBtnIzquierda);
@@ -388,7 +411,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // ¿Ya ganó?
         if (estadoJuego==EstadosJuego.GANO) {
             pantallaGana(batch);
-        } else {
+        }
+        if (estadoJuego==EstadosJuego.PERDIO)
+        {
+            pantallaPerdio(batch);
+        }
+        else {
             btnIzquierda.render(batch);
             btnDerecha.render(batch);
             btnSalto.render(batch);
@@ -400,16 +428,25 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     }
 
+    private void pantallaPerdio(SpriteBatch batch)
+    {
+        System.out.println("PERDISTE :(");
+    }
+
     private void pantallaGana(SpriteBatch batch) {
 
-        System.out.println("GANASTE PAPASiTO");
+        batch.draw(pantallaGana, (pantallaGana.getWidth()-(pantallaGana.getWidth()/3)),(pantallaGana.getHeight()-(pantallaGana.getHeight()/2)));
+        btnSi.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*3) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
+        btnSi.render(batch);
+        btnNo.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*8) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
+        btnNo.render(batch);
 
     }
 
     private void pantallaPausa(SpriteBatch batch) {
         if(estadoJuego == EstadosJuego.PAUSADO)
         {
-            batch.draw(pantallaPausa, (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/8)), (pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2)));
+            batch.draw(pantallaPausa, (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/4)), (pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2)));
 
             btnCont.setPosicion( (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/8) + continuar.getWidth()/3), (pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2) + continuar.getHeight()*4 ) );
             btnCont.render(batch);
@@ -488,7 +525,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             Item it = arrItem.get(i);
             if( ((rui.getX()+52) >= it.getX()) && ((rui.getX() < it.getX()+30)) )
             {
-                if(((rui.getY()+70) >= it.getY()) && (rui.getY() < it.getY()) )
+                if(((rui.getY()+72) >= it.getY()) && (rui.getY()-70 < it.getY()) )
                 {
                     if(it.getTipo() == 1)
                     {
@@ -521,6 +558,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private void stats(){
 
+        if(rui.getVida() == 0)
+        {
+            estadoJuego = EstadosJuego.PERDIO;
+        }
         if(rui.getVida() >= 3)
         {
             rui.setVida(3);
@@ -789,6 +830,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         assetManager.unload("btones.png");
 
+        assetManager.unload("continuar_nivel.png");
+        assetManager.unload("despertaste_continuar.png");
+        assetManager.unload("Si.png");
+        assetManager.unload("No.png");
+
     }
 
     /*
@@ -850,9 +896,24 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     juego.setScreen(new PantallaCargando(juego));
                     estadoJuego=EstadosJuego.JUGANDO;
                 }
+            }  else if (estadoJuego==EstadosJuego.PERDIO) {
+                if(btnSi.contiene(x,y)){
+                    juego.setScreen(new PantallaCargando(juego));
+                    estadoJuego=EstadosJuego.JUGANDO;
+                }
+                if(btnNo.contiene(x,y)){
+                    juego.setScreen(new Menu(juego));
+                    estadoJuego=EstadosJuego.PERDIO;
+                }
             }  else if (estadoJuego==EstadosJuego.GANO) {
-
-
+                if(btnSi.contiene(x,y)){
+                    juego.setScreen(new PantallaCargando(juego));
+                    estadoJuego=EstadosJuego.JUGANDO;
+                }
+                if(btnNo.contiene(x,y)){
+                    juego.setScreen(new Menu(juego));
+                    estadoJuego=EstadosJuego.PERDIO;
+                }
             }
             return true;    // Indica que ya procesó el evento
         }
