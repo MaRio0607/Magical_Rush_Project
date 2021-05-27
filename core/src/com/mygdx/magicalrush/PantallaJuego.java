@@ -58,11 +58,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     // HUD. Los componentes en la pantalla que no se mueven
     private OrthographicCamera camaraHUD;   // Cámara fija
+
     // Botones izquierda/derecha
     private Texture texturaBtnIzquierda;
     private Boton btnIzquierda;
     private Texture texturaBtnDerecha;
     private Boton btnDerecha;
+
     // Botón saltar
     private Texture texturaSalto;
     private Boton btnSalto;
@@ -94,6 +96,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private float reI;
     private float reS;
     private float reM;
+
+    //Items
+    private Texture keyTexture;
+    private Texture vidaTexture;
+    private Texture energiaTexture;
+
+    private Item key;
+    private Item vida;
+    private Item energia;
 
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
@@ -154,6 +165,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         marcador = new Rectangle(1601, 647, 20, 10);
 
     }
+
     private void crearBolas() {
         arrBolas=new Array<>();
         texturaBola=new Texture("SHOOT.png");
@@ -170,6 +182,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("btones.png",Texture.class);
         assetManager.load("PausaBoton.png",Texture.class);
         assetManager.load("nubes.png",Texture.class);
+        //ITEM
+        assetManager.load("Key_Item.png", Texture.class);
+        assetManager.load("Vida_Item.png", Texture.class);
+        assetManager.load("Energia_Item.png", Texture.class);
 
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
@@ -191,12 +207,22 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
+        //Variables para conocer la posición del personaje en el mapa
         re = 0;
         rm = 0;
         ri = 0;
         reI =1600;
         reS = 0;
         reM = 1600;
+
+        //ITEM
+        keyTexture = assetManager.get("Key_Item.png");
+        vidaTexture = assetManager.get("Vida_Item.png");
+        energiaTexture = assetManager.get("Energia_Item.png");
+
+        key = new Item(keyTexture, 640, 340, 1);
+        vida = new Item(vidaTexture, 965, 635, 2);
+        energia = new Item(energiaTexture, 250, 750, 3);
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
@@ -207,10 +233,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         texturaBtnIzquierda = assetManager.get("izquierda.png");
         btnIzquierda = new Boton(texturaBtnIzquierda);
         btnIzquierda.setPosicion(TAM_CELDA, 5 * TAM_CELDA);
+
         //btnIzquierda.setAlfa(0.7f); // Un poco de transparencia
         texturaBtnDerecha = assetManager.get("derecha.png");
         btnDerecha = new Boton(texturaBtnDerecha);
         btnDerecha.setPosicion(6 * TAM_CELDA+ 100, 5 * TAM_CELDA);
+
         //btnDerecha.setAlfa(0.7f); // Un poco de transparencia
         texturaSalto = assetManager.get("salto.png");
         btnSalto = new Boton(texturaSalto);
@@ -254,7 +282,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // Dibujar
         borrarPantalla();
 
-
         batch.setProjectionMatrix(camara.combined);
 
         //Dibujar fondo
@@ -264,12 +291,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 
-
         rendererMapa.setView(camara);
         rendererMapa.render();  // Dibuja el mapa
 
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
+
+        key.render(batch);
+        vida.render(batch);
+        energia.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
 
@@ -277,6 +307,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         for (Disparo bolaFuego:arrBolas){
             bolaFuego.render(batch);
         }
+
         batch.end();
 
         // Dibuja el HUD
@@ -307,8 +338,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private void actualizarCamara() {
         float posX = rui.getX();
         float posY = rui.getY();
+
         // Si está en la parte 'media'
         camara.position.set((int)posX,posY,0);
+
         //Comportamiento del inicio a la parte media
         if(posX<=Juego.ANCHO_CAMARA/2)
         {
@@ -322,6 +355,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             }
 
         }
+
         //Comportamiento de la parte media al final
         if(posX>=Juego.ANCHO_CAMARA/2 && posX+Juego.ANCHO_CAMARA/2<=ANCHO_MAPA)
         {
@@ -334,6 +368,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 camara.position.set((int)posX, posY,0);
             }
         }
+
         //Comportamiento de la parte final del mapa
         if(posX+Juego.ANCHO_CAMARA/2>=ANCHO_MAPA)
         {
@@ -458,9 +493,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         reS = 0;
         reM = 1600;
         reI = 1600;
+
         Rectangle r = arrHitbox.get(re);
         Rectangle rem = arrHitbox.get(rm);
         Rectangle rei = arrHitbox.get(ri);
+
         if(rui.getY()+64 <= r.getY() && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
         {
             rui.setEstadoSalto(Personaje.EstadoSalto.EN_PISO);
@@ -530,6 +567,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("izquierda.png");
         assetManager.unload("Mapa.tmx");
         assetManager.unload("nubes.png");
+
+        assetManager.unload("Key_Item.png");
+        assetManager.unload("Vida_Item.png");
+        assetManager.unload("Energia_Item.png");
     }
 
     /*
@@ -546,6 +587,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         pointer - es el número de dedo que se pone en la pantalla, el primero es 0
         button - el botón del mouse
          */
+
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             transformarCoordenadas(screenX, screenY);
@@ -622,7 +664,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             }
             return true;
         }
-
 
         private void transformarCoordenadas(int screenX, int screenY) {
             // Transformar las coordenadas de la pantalla física a la cámara HUD
