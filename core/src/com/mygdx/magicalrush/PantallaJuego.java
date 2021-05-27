@@ -320,7 +320,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     @Override
     public void render(float delta) { // delta es el tiempo entre frames (Gdx.graphics.getDeltaTime())
         actualizar(delta);
-        if (estadoJuego!=EstadosJuego.PERDIO) {
+        if (estadoJuego!=EstadosJuego.PERDIO && estadoJuego!= EstadosJuego.PAUSADO) {
             // Actualizar objetos en la pantalla
             moverPersonaje();
             actualizarCamara(); // Mover la cámara para que siga al personaje
@@ -422,16 +422,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         switch (keyCount){
             case 0:
-                batch.draw(Llave0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+900), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                batch.draw(Llave0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
                 break;
             case 1:
-                batch.draw(Llave1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+900), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                batch.draw(Llave1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
                 break;
             case 2:
-                batch.draw(Llave2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+900), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                batch.draw(Llave2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
                 break;
             case 3:
-                batch.draw(Llave3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+900), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                batch.draw(Llave3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
                 break;
         }
 
@@ -443,8 +443,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         arrItem.add(key);
         arrItem.add(vida);
         arrItem.add(energia);
-
-        System.out.println(rui.getVida() + ", " + rui.getEnergia() + ", " + keyCount);
         for (int i=0; i<arrItem.size; i++) {
             Item it = arrItem.get(i);
             if( ((rui.getX()+52) >= it.getX()) && ((rui.getX() < it.getX()+30)) )
