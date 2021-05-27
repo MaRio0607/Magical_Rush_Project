@@ -5,9 +5,11 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -115,6 +117,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private Texture vida0, vida1, vida2,vida3;
     private Texture energia0, energia1, energia2, energia3, energia4, energia5;
+    private Texture Llave0, Llave1, Llave2, Llave3;
 
     // Fondo
     private Texture texturaNubes;
@@ -204,7 +207,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("Energia_4.png", Texture.class);
         assetManager.load("Energia_5.png", Texture.class);
 
-
+        assetManager.load("Llave_0.png", Texture.class);
+        assetManager.load("Llave_1.png", Texture.class);
+        assetManager.load("Llave_2.png", Texture.class);
+        assetManager.load("Llave_3.png", Texture.class);
 
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
@@ -236,6 +242,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         rui.setVida(3);
         rui.setEnergia(0);
+        keyCount=0;
 
         //ITEM
         keyTexture = assetManager.get("Key_Item.png");
@@ -253,6 +260,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         energia3 = assetManager.get("Energia_3.png");
         energia4 = assetManager.get("Energia_4.png");
         energia5 = assetManager.get("Energia_5.png");
+
+        Llave0 = assetManager.get("Llave_0.png");
+        Llave1 = assetManager.get("Llave_1.png");
+        Llave2 = assetManager.get("Llave_2.png");
+        Llave3 = assetManager.get("Llave_3.png");
 
         key = new Item(keyTexture, 640, 340, 1);
         vida = new Item(vidaTexture, 965, 635, 2);
@@ -308,7 +320,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     @Override
     public void render(float delta) { // delta es el tiempo entre frames (Gdx.graphics.getDeltaTime())
         actualizar(delta);
-        if (estadoJuego!=EstadosJuego.PERDIO) {
+        if (estadoJuego!=EstadosJuego.PERDIO && estadoJuego!= EstadosJuego.PAUSADO) {
             // Actualizar objetos en la pantalla
             moverPersonaje();
             actualizarCamara(); // Mover la cámara para que siga al personaje
@@ -371,6 +383,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     }
 
     private void UI(SpriteBatch batch) {
+
         switch (rui.getVida()){
             case 0:
                 batch.draw(vida0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
@@ -407,6 +420,21 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 break;
         }
 
+        switch (keyCount){
+            case 0:
+                batch.draw(Llave0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                break;
+            case 1:
+                batch.draw(Llave1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                break;
+            case 2:
+                batch.draw(Llave2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                break;
+            case 3:
+                batch.draw(Llave3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
+                break;
+        }
+
 
     }
 
@@ -415,8 +443,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         arrItem.add(key);
         arrItem.add(vida);
         arrItem.add(energia);
-
-        System.out.println(rui.getVida() + ", " + rui.getEnergia() + ", " + keyCount);
         for (int i=0; i<arrItem.size; i++) {
             Item it = arrItem.get(i);
             if( ((rui.getX()+52) >= it.getX()) && ((rui.getX() < it.getX()+30)) )
@@ -706,6 +732,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("Energia_3.png");
         assetManager.unload("Energia_4.png");
         assetManager.unload("Energia_5.png");
+
+        assetManager.unload("Llave_0.png");
+        assetManager.unload("Llave_1.png");
+        assetManager.unload("Llave_2.png");
+        assetManager.unload("Llave_3.png");
+
     }
 
     /*
