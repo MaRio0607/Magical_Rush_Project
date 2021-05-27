@@ -397,8 +397,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private void pantallaPausa(SpriteBatch batch) {
         if(estadoJuego == EstadosJuego.PAUSADO)
         {
-            batch.draw(pantallaPausa, (camara.position.x-(Juego.ANCHO_CAMARA/4)+85), camara.position.y+(Juego.ALTO_CAMARA/2)-940);
-            btnCont.setPosicion((camara.position.x-(Juego.ANCHO_CAMARA/4)+190), camara.position.y+(Juego.ALTO_CAMARA/2)-700);
+            batch.draw(pantallaPausa, (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/8)), (pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2)));
+
+            btnCont.setPosicion( (pantallaPausa.getWidth()-(pantallaPausa.getWidth()/8) + continuar.getWidth()/3), (pantallaPausa.getHeight()-(pantallaPausa.getHeight()/2) + continuar.getHeight()*4 ) );
             btnCont.render(batch);
         }
 
