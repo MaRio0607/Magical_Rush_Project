@@ -1,29 +1,31 @@
     package com.mygdx.magicalrush;
 
-    import com.badlogic.gdx.Gdx;
-    import com.badlogic.gdx.InputAdapter;
-    import com.badlogic.gdx.Screen;
-    import com.badlogic.gdx.assets.AssetManager;
-    import com.badlogic.gdx.graphics.GL20;
-    import com.badlogic.gdx.graphics.OrthographicCamera;
-    import com.badlogic.gdx.graphics.Texture;
-    import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-    import com.badlogic.gdx.maps.tiled.TiledMap;
-    import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-    import com.badlogic.gdx.math.Rectangle;
-    import com.badlogic.gdx.math.Vector3;
-    import com.badlogic.gdx.scenes.scene2d.InputEvent;
-    import com.badlogic.gdx.scenes.scene2d.Stage;
-    import com.badlogic.gdx.scenes.scene2d.ui.Button;
-    import com.badlogic.gdx.scenes.scene2d.ui.Image;
-    import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-    import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-    import com.badlogic.gdx.utils.Align;
-    import com.badlogic.gdx.utils.Array;
-    import com.badlogic.gdx.utils.viewport.StretchViewport;
-    import com.badlogic.gdx.utils.viewport.Viewport;
-
-    import javax.swing.text.View;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 
     public class PantallaJuego implements Screen
@@ -47,9 +49,7 @@
 
     // Personaje
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
-    private Texture texturaEnemigo;
     private Personaje rui;
-    private Personaje slime;
     public static final int TAM_CELDA = 16;
 
     //Disparo del personaje
@@ -58,11 +58,13 @@
 
     // HUD. Los componentes en la pantalla que no se mueven
     private OrthographicCamera camaraHUD;   // Cámara fija
+
     // Botones izquierda/derecha
     private Texture texturaBtnIzquierda;
     private Boton btnIzquierda;
     private Texture texturaBtnDerecha;
     private Boton btnDerecha;
+
     // Botón saltar
     private Texture texturaSalto;
     private Boton btnSalto;
@@ -95,10 +97,24 @@
     private float reS;
     private float reM;
 
+    //Items
+    private Texture keyTexture;
+    private Texture vidaTexture;
+    private Texture energiaTexture;
+
+    private Array<Item> arrItem;
+    private Item key;
+    private Item vida;
+    private Item energia;
+    private int keyCount;
+
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
     private Rectangle r6, r7, r8, r9, r10, r11;
     private Rectangle marcador;
+
+    private Texture vida0, vida1, vida2,vida3;
+    private Texture energia0, energia1, energia2, energia3, energia4, energia5;
 
     // Fondo
     private Texture texturaNubes;
@@ -154,6 +170,7 @@
         marcador = new Rectangle(1601, 647, 20, 10);
 
     }
+
     private void crearBolas() {
         arrBolas=new Array<>();
         texturaBola=new Texture("SHOOT.png");
@@ -164,15 +181,30 @@
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
 
         assetManager.load("RUIS-Sheet.png",Texture.class);
-        assetManager.load("Slime-Sheet.png",Texture.class);
         assetManager.load("disparo.png", Texture.class);
         assetManager.load("Cont_bot.png",Texture.class);
-        assetManager.load("Cont_bot3.png",Texture.class);
-        assetManager.load("Cont_bot5.png",Texture.class);
         assetManager.load("SHOOT.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("PausaBoton.png",Texture.class);
         assetManager.load("nubes.png",Texture.class);
+        //ITEM
+        assetManager.load("Key_Item.png", Texture.class);
+        assetManager.load("Vida_Item.png", Texture.class);
+        assetManager.load("Energia_Item.png", Texture.class);
+
+        assetManager.load("Vida_0.png", Texture.class);
+        assetManager.load("Vida_1.png", Texture.class);
+        assetManager.load("Vida_2.png", Texture.class);
+        assetManager.load("Vida_3.png", Texture.class);
+
+        assetManager.load("Energia_0.png", Texture.class);
+        assetManager.load("Energia_1.png", Texture.class);
+        assetManager.load("Energia_2.png", Texture.class);
+        assetManager.load("Energia_3.png", Texture.class);
+        assetManager.load("Energia_4.png", Texture.class);
+        assetManager.load("Energia_5.png", Texture.class);
+
+
 
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
@@ -191,9 +223,10 @@
 
         // Cargar frames
         texturaPersonaje = assetManager.get("RUIS-Sheet.png");
-        texturaEnemigo = assetManager.get("Slime-Sheet.png");
+
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
+        //Variables para conocer la posición del personaje en el mapa
         re = 0;
         rm = 0;
         ri = 0;
@@ -201,33 +234,47 @@
         reS = 0;
         reM = 1600;
 
-        //Cargar Enemigo
-        slime=new Personaje(texturaEnemigo);
-        re = 0;
-        rm = 0;
-        ri = 0;
-        reI =1600;
-        reS = 0;
-        reM = 1600;
+        rui.setVida(3);
+        rui.setEnergia(0);
+
+        //ITEM
+        keyTexture = assetManager.get("Key_Item.png");
+        vidaTexture = assetManager.get("Vida_Item.png");
+        energiaTexture = assetManager.get("Energia_Item.png");
+
+        vida0 = assetManager.get("Vida_0.png");
+        vida1 = assetManager.get("Vida_1.png");
+        vida2 = assetManager.get("Vida_2.png");
+        vida3 = assetManager.get("Vida_3.png");
+
+        energia0 = assetManager.get("Energia_0.png");
+        energia1 = assetManager.get("Energia_1.png");
+        energia2 = assetManager.get("Energia_2.png");
+        energia3 = assetManager.get("Energia_3.png");
+        energia4 = assetManager.get("Energia_4.png");
+        energia5 = assetManager.get("Energia_5.png");
+
+        key = new Item(keyTexture, 640, 340, 1);
+        vida = new Item(vidaTexture, 965, 635, 2);
+        energia = new Item(energiaTexture, 250, 750, 3);
+
+        keyCount = 0;
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
         rui.setCL(true);
         rui.setCR(true);
 
-        //Posicion Enemigo
-        slime.setPosicion(1070,900);
-        slime.setCL(true);
-        slime.setCR(true);
-
         // Crear los botones
         texturaBtnIzquierda = assetManager.get("izquierda.png");
         btnIzquierda = new Boton(texturaBtnIzquierda);
         btnIzquierda.setPosicion(TAM_CELDA, 5 * TAM_CELDA);
+
         //btnIzquierda.setAlfa(0.7f); // Un poco de transparencia
         texturaBtnDerecha = assetManager.get("derecha.png");
         btnDerecha = new Boton(texturaBtnDerecha);
         btnDerecha.setPosicion(6 * TAM_CELDA+ 100, 5 * TAM_CELDA);
+
         //btnDerecha.setAlfa(0.7f); // Un poco de transparencia
         texturaSalto = assetManager.get("salto.png");
         btnSalto = new Boton(texturaSalto);
@@ -266,11 +313,11 @@
             moverPersonaje();
             actualizarCamara(); // Mover la cámara para que siga al personaje
             probarChoqueParedes();
+            actualizarItems();
         }
 
         // Dibujar
         borrarPantalla();
-
 
         batch.setProjectionMatrix(camara.combined);
 
@@ -279,7 +326,7 @@
         batch.draw(texturaNubes, xFondo, yFondo);
         batch.end();
 
-
+        stats();
 
 
         rendererMapa.setView(camara);
@@ -287,6 +334,10 @@
 
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
+        UI(batch);
+        key.render(batch);
+        vida.render(batch);
+        energia.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
 
@@ -294,6 +345,7 @@
         for (Disparo bolaFuego:arrBolas){
             bolaFuego.render(batch);
         }
+
         batch.end();
 
         // Dibuja el HUD
@@ -318,14 +370,102 @@
 
     }
 
+    private void UI(SpriteBatch batch) {
+        switch (rui.getVida()){
+            case 0:
+                batch.draw(vida0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+            case 1:
+                batch.draw(vida1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+            case 2:
+                batch.draw(vida2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+            case 3:
+                batch.draw(vida3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
+                break;
+        }
+
+        switch (rui.getEnergia()){
+            case 0:
+                batch.draw(energia0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 1:
+                batch.draw(energia1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 2:
+                batch.draw(energia2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 3:
+                batch.draw(energia3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 4:
+                batch.draw(energia4, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+            case 5:
+                batch.draw(energia5, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
+                break;
+        }
+
+
+    }
+
+    private void actualizarItems() {
+        arrItem=new Array<>();
+        arrItem.add(key);
+        arrItem.add(vida);
+        arrItem.add(energia);
+
+        System.out.println(rui.getVida() + ", " + rui.getEnergia() + ", " + keyCount);
+        for (int i=0; i<arrItem.size; i++) {
+            Item it = arrItem.get(i);
+            if( ((rui.getX()+52) >= it.getX()) && ((rui.getX() < it.getX()+30)) )
+            {
+                if(((rui.getY()+70) >= it.getY()) && (rui.getY() < it.getY()) )
+                {
+                    if(it.getTipo() == 1)
+                    {
+                        keyCount ++;
+                    }
+                    if(it.getTipo() == 2)
+                    {
+                        rui.setVida(rui.getVida()+1);
+                    }
+                    if(it.getTipo() == 3)
+                    {
+                        rui.setEnergia(rui.getEnergia()+1);
+                    }
+                    it.setPosicion(-100,it.getY());
+                    arrItem.removeIndex(i);
+                }
+            }
+        }
+
+    }
+
+    private void stats(){
+
+        if(rui.getVida() >= 3)
+        {
+            rui.setVida(3);
+        }
+        if(rui.getEnergia() >= 5)
+        {
+            rui.setEnergia(5);
+        }
+
+    }
+
     // Divide el escenario en 3 partes, el inicio, medio y final
     // Cambia la forma en que la camara interactua dependiendo de la zona
     // Y crea limites en X y en Y que cubran solo el mapa
     private void actualizarCamara() {
         float posX = rui.getX();
         float posY = rui.getY();
+
         // Si está en la parte 'media'
         camara.position.set((int)posX,posY,0);
+
         //Comportamiento del inicio a la parte media
         if(posX<=Juego.ANCHO_CAMARA/2)
         {
@@ -339,6 +479,7 @@
             }
 
         }
+
         //Comportamiento de la parte media al final
         if(posX>=Juego.ANCHO_CAMARA/2 && posX+Juego.ANCHO_CAMARA/2<=ANCHO_MAPA)
         {
@@ -351,6 +492,7 @@
                 camara.position.set((int)posX, posY,0);
             }
         }
+
         //Comportamiento de la parte final del mapa
         if(posX+Juego.ANCHO_CAMARA/2>=ANCHO_MAPA)
         {
@@ -475,9 +617,11 @@
         reS = 0;
         reM = 1600;
         reI = 1600;
+
         Rectangle r = arrHitbox.get(re);
         Rectangle rem = arrHitbox.get(rm);
         Rectangle rei = arrHitbox.get(ri);
+
         if(rui.getY()+64 <= r.getY() && rui.getEstadoSalto() != Personaje.EstadoSalto.SUBIENDO)
         {
             rui.setEstadoSalto(Personaje.EstadoSalto.EN_PISO);
@@ -508,7 +652,6 @@
             rui.setCL(true);
         }
     }
-
 
     private void borrarPantalla() {
         Gdx.gl.glClearColor(0.42f, 0.55f, 1, 1);    // r, g, b, alpha
@@ -541,13 +684,28 @@
         // Los assets se liberan a través del assetManager
         AssetManager assetManager = juego.getAssetManager();
         assetManager.unload("RUIS-Sheet.png");
-        assetManager.unload("Slime-Sheet.png");
         assetManager.unload("derecha.png");
         assetManager.unload("salto.png");
         assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
         assetManager.unload("Mapa.tmx");
         assetManager.unload("nubes.png");
+
+        assetManager.unload("Key_Item.png");
+        assetManager.unload("Vida_Item.png");
+        assetManager.unload("Energia_Item.png");
+
+        assetManager.unload("Vida_0.png");
+        assetManager.unload("Vida_1.png");
+        assetManager.unload("Vida_2.png");
+        assetManager.unload("Vida_3.png");
+
+        assetManager.unload("Energia_0.png");
+        assetManager.unload("Energia_1.png");
+        assetManager.unload("Energia_2.png");
+        assetManager.unload("Energia_3.png");
+        assetManager.unload("Energia_4.png");
+        assetManager.unload("Energia_5.png");
     }
 
     /*
@@ -564,6 +722,7 @@
         pointer - es el número de dedo que se pone en la pantalla, el primero es 0
         button - el botón del mouse
          */
+
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             transformarCoordenadas(screenX, screenY);
@@ -641,7 +800,6 @@
             return true;
         }
 
-
         private void transformarCoordenadas(int screenX, int screenY) {
             // Transformar las coordenadas de la pantalla física a la cámara HUD
             coordenadas.set(screenX, screenY, 0);
@@ -656,6 +814,8 @@
         private Texture textureFondo;
         public  EscenaPausa(Viewport vista){
             super(vista);//pasa la vista al constructor stage
+
+
             textureFondo=new Texture("btones.png");
             Image imgeFondo=new Image(textureFondo);
             imgeFondo.setPosition(1280/2,720/2+400, Align.center);
@@ -665,26 +825,7 @@
             TextureRegionDrawable trd = new TextureRegionDrawable(textureBtn);
             Button btn = new Button(trd);
             addActor(btn);
-            btn.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+275));
-            //boton menu
-            Texture textureBtn2=new Texture("Cont_bot5.png");
-            TextureRegionDrawable trd2 = new TextureRegionDrawable(textureBtn2);
-            Button btn2 = new Button(trd2);
-            //btn2.setOnClickListener(new OnClickListener(){
-            //    public void onClick(View view){
-            //        Intent myIntent = new Intent(this,Menu.class);
-            //        startActivity(myIntent);
-            //    }
-            //});
-            addActor(btn2);
-            btn2.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+375));
-            //boton reiniciar
-            Texture textureBtn3=new Texture("Cont_bot3.png");
-            TextureRegionDrawable trd3 = new TextureRegionDrawable(textureBtn3);
-            Button btn3 = new Button(trd3);
-            addActor(btn3);
-            btn3.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+475));
-            //listener continuar
+            btn.setPosition(camara.position.x - Juego.ANCHO_CAMARA/2 + (1280/2-130),(720/2+400));
             btn.addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -694,29 +835,9 @@
                     Gdx.input.setInputProcessor(procesadorEntrada);
                 }
             });
-            btn2.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
-                    //Menu
-                    juego.setScreen(new Menu(juego));
-                    Gdx.input.setInputProcessor(procesadorEntrada);
-                }
-            });
-            btn3.addListener(new ClickListener(){
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    super.clicked(event, x, y);
-                    //reiniciar juego
-                    juego.setScreen(new PantallaCargando(juego));
-                    Gdx.input.setInputProcessor(procesadorEntrada);
-                }
-            });
-
         }
 
     }
-
     public enum EstadosJuego {
         GANO,
         JUGANDO,

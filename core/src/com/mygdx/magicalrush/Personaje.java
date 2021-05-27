@@ -22,6 +22,8 @@ public class Personaje
     // Estados del personaje
     private EstadoMovimiento estadoMovimiento;
     private EstadoSalto estadoSalto;
+    public int vida;
+    public int energia;
 
     // SALTO del personaje
     private static final float V0 = 40;     // Velocidad inicial del salto
@@ -165,6 +167,12 @@ public class Personaje
     public float getY() {
         return sprite.getY();
     }
+
+    public int getVida() {return vida;}
+    public void setVida(int v){vida = v;}
+
+    public int getEnergia() {return energia;}
+    public void setEnergia(int e) {energia = e;}
 
     public void setPosicion(float x, int y) {
         sprite.setPosition(x,y);
