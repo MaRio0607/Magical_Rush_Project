@@ -54,7 +54,9 @@ import javax.xml.soap.Text;
 
     // Personaje
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
+    private Texture texturaEnemigo;
     private Personaje rui;
+    private Slime slime;
     public static final int TAM_CELDA = 16;
 
     //Disparo del personaje
@@ -210,6 +212,7 @@ import javax.xml.soap.Text;
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
 
         assetManager.load("RUIS-Sheet.png",Texture.class);
+        assetManager.load("Slime-Sheet.png",Texture.class);
         assetManager.load("disparo.png", Texture.class);
         assetManager.load("Cont_bot.png",Texture.class);
         assetManager.load("Cont_bot3.png",Texture.class);
@@ -265,6 +268,7 @@ import javax.xml.soap.Text;
 
         // Cargar frames
         texturaPersonaje = assetManager.get("RUIS-Sheet.png");
+        texturaEnemigo = assetManager.get("Slime-Sheet.png");
 
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
@@ -279,6 +283,19 @@ import javax.xml.soap.Text;
         rui.setVida(2);
         rui.setEnergia(0);
         keyCount=0;
+        keyNeed=1;
+
+        //Crear Slime
+        slime = new Slime(texturaEnemigo);
+        //Variables para conocer la posición del enemigo en el mapa
+        re = 0;
+        rm = 0;
+        ri = 0;
+        reI =1600;
+        reS = 0;
+        reM = 1600;
+        //slime.setVida(2);
+        keyCount=1;
         keyNeed=1;
 
         //ITEM
@@ -320,6 +337,11 @@ import javax.xml.soap.Text;
         rui.setPosicion(rui.getX(),900);
         rui.setCL(true);
         rui.setCR(true);
+
+        // Posición inicial del enemigo
+        slime.setPosicion(slime.getX(),900);
+        slime.setCL(true);
+        slime.setCR(true);
 
         // Crear los botones
         continuar = assetManager.get("Cont_bot.png");
@@ -677,6 +699,33 @@ import javax.xml.soap.Text;
         }
     }
 
+    //Movimiento del personaje.
+    private void moverEnemigo() {
+        // Prueba caída libre inicial o movimiento horizontal
+        switch (slime.getEstadoMovimiento()) {
+            case INICIANDO:
+                slime.setEstadoMovimiento(Slime.EstadoMovimiento.QUIETO);
+                break;
+            case MOV_DERECHA:
+                slime.actualizar();
+                break;
+            case MOV_IZQUIERDA:
+                slime.actualizar();
+                break;
+        }
+
+        // Saltar
+        switch (slime.getEstadoSalto()) {
+            case EN_PISO:
+                break;
+            case SUBIENDO:
+                slime.actualizarSalto();
+                break;
+            case BAJANDO:
+                slime.caer();
+                break;
+        }
+    }
 
     // Prueba si esta chocando con las paredes
     private void probarChoqueParedes() {
@@ -891,6 +940,7 @@ import javax.xml.soap.Text;
                     estadoJuego=EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
                     juego.setScreen(new Menu(juego));
+
                     estadoJuego=EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
                     juego.setScreen(new PantallaCargando(juego));
