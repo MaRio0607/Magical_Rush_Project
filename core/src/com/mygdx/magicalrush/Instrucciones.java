@@ -59,7 +59,7 @@ public class Instrucciones implements Screen {
         // Cargar las texturas/mapas
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
 
-        assetManager.load("fondo_A.png", Texture.class);    // Cargar imagen
+        assetManager.load("cuaderno.png", Texture.class);    // Cargar imagen
         assetManager.load("vol_BOT.png", Texture.class);
         // Texturas de los botones
 
@@ -70,7 +70,7 @@ public class Instrucciones implements Screen {
     private void crearObjetos() {
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
         // Carga el mapa en memoria
-        texturaAcercaDe = assetManager.get("fondo_A.png");
+        texturaAcercaDe = assetManager.get("cuaderno.png");
         texturaRegresar = assetManager.get("vol_BOT.png");
 
         btnRegresar = new Boton(texturaRegresar);
@@ -124,7 +124,7 @@ public class Instrucciones implements Screen {
     public void dispose() {
         // Los assets se liberan a través del assetManager
         AssetManager assetManager = juego.getAssetManager();
-        assetManager.unload("fondo_A.png");
+        assetManager.unload("cuaderno.png");
         assetManager.unload("vol_BOT.png");
     }
 
