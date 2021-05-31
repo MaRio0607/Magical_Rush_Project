@@ -1,4 +1,4 @@
-    package com.mygdx.magicalrush;
+     package com.mygdx.magicalrush;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
@@ -294,7 +294,7 @@ import javax.xml.soap.Text;
         reI =1600;
         reS = 0;
         reM = 1600;
-        //slime.setVida(2);
+        slime.setVida(2);
         keyCount=1;
         keyNeed=1;
 
@@ -339,7 +339,7 @@ import javax.xml.soap.Text;
         rui.setCR(true);
 
         // Posición inicial del enemigo
-        slime.setPosicion(slime.getX(),900);
+        slime.setPosicion(900,900);
         slime.setCL(true);
         slime.setCR(true);
 
@@ -418,6 +418,7 @@ import javax.xml.soap.Text;
         puerta.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
+        slime.render(batch);
 
         //Dibujar bolas de fuego
         for (Disparo bolaFuego:arrBolas){
@@ -575,6 +576,27 @@ import javax.xml.soap.Text;
                 }
             }
         }
+        for (int i=0; i<arrItem.size; i++) {
+            Item it = arrItem.get(i);
+            if( ((slime.getX()+52) >= it.getX()) && ((slime.getX() < it.getX()+30)) )
+            {
+                if(((slime.getY()+72) >= it.getY()) && (slime.getY()-70 < it.getY()) )
+                {
+                    if(it.getTipo() == 1)
+                    {
+                        keyCount ++;
+                        it.setPosicion(-100,it.getY());
+                        arrItem.removeIndex(i);
+                    }
+                    if(it.getTipo() == 2)
+                    {
+                        slime.setVida(slime.getVida()+1);
+                        it.setPosicion(-100,it.getY());
+                        arrItem.removeIndex(i);
+                    }
+                }
+            }
+        }
 
     }
 
@@ -594,6 +616,7 @@ import javax.xml.soap.Text;
         }
 
     }
+
 
     // Divide el escenario en 3 partes, el inicio, medio y final
     // Cambia la forma en que la camara interactua dependiendo de la zona
@@ -695,6 +718,32 @@ import javax.xml.soap.Text;
                 break;
             case BAJANDO:
                 rui.caer();
+                break;
+        }
+    }
+    private void moverSlime() {
+        // Prueba caída libre inicial o movimiento horizontal
+        switch (slime.getEstadoMovimiento()) {
+            case INICIANDO:
+                slime.setEstadoMovimiento(Slime.EstadoMovimiento.QUIETO);
+                break;
+            case MOV_DERECHA:
+                slime.actualizar();
+                break;
+            case MOV_IZQUIERDA:
+                slime.actualizar();
+                break;
+        }
+
+        // Saltar
+        switch (slime.getEstadoSalto()) {
+            case EN_PISO:
+                break;
+            case SUBIENDO:
+                slime.actualizarSalto();
+                break;
+            case BAJANDO:
+                slime.caer();
                 break;
         }
     }
