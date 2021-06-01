@@ -4,35 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import javax.xml.soap.Text;
 
-
-    public class PantallaJuego implements Screen
+    public class NivelDos implements Screen
 
 {
     public static final float ANCHO_MAPA = 1600;   // Ancho del mapa en pixeles
@@ -99,7 +84,7 @@ import javax.xml.soap.Text;
     private ProcesadorEntrada procesadorEntrada;
 
     // Estados del juego
-    private EstadosJuego estadoJuego=EstadosJuego.JUGANDO;
+    private EstadosJuego estadoJuego= EstadosJuego.JUGANDO;
 
     //Escenario Hitbox
     private int re;
@@ -126,7 +111,9 @@ import javax.xml.soap.Text;
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
     private Rectangle r6, r7, r8, r9, r10, r11;
-    private Rectangle marcador;
+    private Rectangle r12, r13, r14, r15, r16, r17;
+    private Rectangle r18, r19, r20, r21, r22, r23, r24, r25, r26, r27;
+    private Rectangle marcador, marcador0;
 
     private Texture vida0, vida1, vida2,vida3;
     private Texture energia0, energia1, energia2, energia3, energia4, energia5;
@@ -153,7 +140,7 @@ import javax.xml.soap.Text;
     private float yFondo = 0;
 
 
-    public PantallaJuego(Juego juego) {
+    public NivelDos(Juego juego) {
         this.juego = juego;
     }
 
@@ -185,20 +172,39 @@ import javax.xml.soap.Text;
         Gdx.input.setInputProcessor(procesadorEntrada);
 
         //Dibuja rectangulos que son usados para hitboxes
-        r1 = new Rectangle(0, 800, 604, 800);
-        r2 = new Rectangle(280, 849, 398, 175);
-        r3 = new Rectangle(604, 674, 418, 150);
-        r4 = new Rectangle(604,384,584,100);
-        r5 = new Rectangle(1188, 674, 413, 650);
+        r1 = new Rectangle(0, 1500, 1052, 400);
+        r2 = new Rectangle(1155, 1503, 440, 250);
+        r3 = new Rectangle(1005, 1185, 600, 150);
+        r4 = new Rectangle(750, 1055, 300, 10);
+        r5 = new Rectangle(85, 1185, 705, 200);
+        r6 = new Rectangle(1500, 1075, 100, 10);
+        r7 = new Rectangle(0, 735, 1600, 10);
 
-        r6 = new Rectangle(1022, 560, 81, 10);
-        r7 = new Rectangle(1136, 514, 72, 10);
-        r8 = new Rectangle(1054, 450, 134, 10);
-        r9 = new Rectangle(1136, 610, 72, 10);
-        r10 = new Rectangle(1022, 657, 81, 10);
-        r11 = new Rectangle(1166, 674, 22, 10);
+        r8 = new Rectangle(1050, 1490, 50, 10);
+        r9 = new Rectangle(1140, 1503, 50, 10);
+        r10 = new Rectangle(1100, 1440, 60, 10);
+        r11 = new Rectangle(1050, 1395, 50, 10);
+        r12 = new Rectangle(1100, 1345, 60, 10);
+        r13 = new Rectangle(1050, 1295, 50, 10);
+        r14 = new Rectangle(1100, 1245, 85, 10);
+        r15 = new Rectangle(1200, 1220, 50, 10);
+
+        r16 = new Rectangle(790, 1150, 50, 10);
+        r17 = new Rectangle(837, 1120, 67, 10);
+        r18 = new Rectangle(893, 1088, 70, 10);
+
+        r19 = new Rectangle(0, 1153, 50, 10);
+        r20 = new Rectangle(0, 1123, 50, 10);
+        r21 = new Rectangle(0, 1148, 50, 10);
+        r22 = new Rectangle(0, 1085, 50, 10);
+        r23 = new Rectangle(0, 1022, 50, 10);
+        r24 = new Rectangle(0, 959, 50, 10);
+        r25 = new Rectangle(0, 896, 50, 10);
+        r26 = new Rectangle(0, 833, 50, 10);
+        r27 = new Rectangle(0, 770, 50, 10);
 
         marcador = new Rectangle(1601, 647, 20, 10);
+        marcador0 = new Rectangle(-100,730, 50,161);
 
     }
 
@@ -259,7 +265,7 @@ import javax.xml.soap.Text;
         //fondo
         texturaNubes = assetManager.get("nubes.png");
         // Carga el mapa en memoria
-        mapa = assetManager.get("Mapa.tmx");
+        mapa = assetManager.get("SegundoNivel.tmx");
 
         // Crear el objeto que dibujará el mapa
         rendererMapa = new OrthogonalTiledMapRenderer(mapa,batch);
@@ -327,7 +333,7 @@ import javax.xml.soap.Text;
         puerta = new Item(puertaTexture, 1412,608,4);
 
         // Posición inicial del personaje
-        rui.setPosicion(rui.getX(),900);
+        rui.setPosicion(rui.getX(),1600);
         rui.setCL(true);
         rui.setCR(true);
 
@@ -374,7 +380,7 @@ import javax.xml.soap.Text;
     @Override
     public void render(float delta) { // delta es el tiempo entre frames (Gdx.graphics.getDeltaTime())
         actualizar(delta);
-        if (estadoJuego!=EstadosJuego.PERDIO && estadoJuego!= EstadosJuego.PAUSADO) {
+        if (estadoJuego!= EstadosJuego.PERDIO && estadoJuego!= EstadosJuego.PAUSADO) {
             // Actualizar objetos en la pantalla
             moverPersonaje();
             actualizarCamara(); // Mover la cámara para que siga al personaje
@@ -421,10 +427,10 @@ import javax.xml.soap.Text;
         batch.begin();
 
         // ¿Ya ganó?
-        if (estadoJuego==EstadosJuego.GANO) {
+        if (estadoJuego== EstadosJuego.GANO) {
             pantallaGana(batch);
         }
-        if (estadoJuego==EstadosJuego.PERDIO)
+        if (estadoJuego== EstadosJuego.PERDIO)
         {
             pantallaPerdio(batch);
         }
@@ -640,7 +646,7 @@ import javax.xml.soap.Text;
     }
 
     private void actualizar(float delta) {
-        if (estadoJuego==EstadosJuego.JUGANDO){
+        if (estadoJuego== EstadosJuego.JUGANDO){
             actualizarDisparo(delta);
         }
 
@@ -705,7 +711,24 @@ import javax.xml.soap.Text;
         arrHitbox.add(r9);
         arrHitbox.add(r10);
         arrHitbox.add(r11);
+        arrHitbox.add(r12);
+        arrHitbox.add(r13);
+        arrHitbox.add(r14);
+        arrHitbox.add(r15);
+        arrHitbox.add(r16);
+        arrHitbox.add(r17);
+        arrHitbox.add(r18);
+        arrHitbox.add(r19);
+        arrHitbox.add(r20);
+        arrHitbox.add(r21);
+        arrHitbox.add(r22);
+        arrHitbox.add(r23);
+        arrHitbox.add(r24);
+        arrHitbox.add(r25);
+        arrHitbox.add(r26);
+        arrHitbox.add(r27);
         arrHitbox.add(marcador);
+        arrHitbox.add(marcador0);
         //Verifica si esta dentro de las x de alguno de los rectangulos
         //En caso de que si checa cual es el mas cercano a el personaje debajo de este
         //Ese rectangulo es con el que se maneja la gravedad
@@ -759,7 +782,7 @@ import javax.xml.soap.Text;
         }
         if( rui.getX()+1 >= rem.getX()-10 )
         {
-            if (rem.getY() > (rui.getY()+70) && ((rem.getY()-rem.getHeight()) < (rui.getY()+70) ))
+            if (rem.getY() > (rui.getY()+64) && ((rem.getY()-rem.getHeight()) < (rui.getY()+64) ))
             {
                 rui.setCR(false);
             }
@@ -773,7 +796,23 @@ import javax.xml.soap.Text;
         }
         if( rui.getX()-10 <= ((rei.getX() + rei.getWidth())+5) && (rui.getY()+70 < rei.getY()))
         {
-            rui.setCL(false);
+            if(((rui.getY()+70) < (rei.getY()+rei.getHeight())) )
+            {
+                rui.setCL(true);
+            }
+            if( (rui.getY() < rei.getY()) && (rui.getY() > rei.getY()-rei.getHeight())  )
+            {
+                rui.setCL(false);
+
+            }
+            else {
+                rui.setCL(false);
+                if( rui.getY() < 950 )
+                {
+                    rui.setCL(true);
+                }
+            }
+
         }
         else{
             rui.setCL(true);
@@ -815,7 +854,7 @@ import javax.xml.soap.Text;
         assetManager.unload("salto.png");
         assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
-        assetManager.unload("Mapa.tmx");
+        assetManager.unload("SegundoNivel.tmx");
         assetManager.unload("nubes.png");
 
         assetManager.unload("Key_Item.png");
@@ -867,7 +906,7 @@ import javax.xml.soap.Text;
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             transformarCoordenadas(screenX, screenY);
-            if (estadoJuego==EstadosJuego.JUGANDO) {
+            if (estadoJuego== EstadosJuego.JUGANDO) {
                 // Preguntar si las coordenadas están sobre el botón derecho
                 if (btnDerecha.contiene(x, y) && rui.getEstadoMovimiento() != Personaje.EstadoMovimiento.INICIANDO) {
                     // Tocó el botón derecha, hacer que el personaje se mueva a la derecha
@@ -881,7 +920,7 @@ import javax.xml.soap.Text;
                     // Tocó el botón saltar
                     rui.saltar();
                 } else if ((btnPausa.contiene(x, y))) {
-                    estadoJuego=EstadosJuego.PAUSADO;
+                    estadoJuego= EstadosJuego.PAUSADO;
                 }else if (btnDisp.contiene(x,y)){
                     //Dispara hacia la derecha si esta viendo en esa dirección
                     if(rui.getLRight() == true)
@@ -898,34 +937,34 @@ import javax.xml.soap.Text;
                         arrBolas.add(bolaFuego);
                     }
                 }
-            } else if (estadoJuego ==EstadosJuego.PAUSADO){
+            } else if (estadoJuego == EstadosJuego.PAUSADO){
                 if(btnCont.contiene(x,y)){
-                    estadoJuego=EstadosJuego.JUGANDO;
+                    estadoJuego= EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
                     juego.setScreen(new Menu(juego));
 
-                    estadoJuego=EstadosJuego.PERDIO;
+                    estadoJuego= EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
                     juego.setScreen(new PantallaCargando(juego));
-                    estadoJuego=EstadosJuego.JUGANDO;
+                    estadoJuego= EstadosJuego.JUGANDO;
                 }
-            }  else if (estadoJuego==EstadosJuego.PERDIO) {
+            }  else if (estadoJuego== EstadosJuego.PERDIO) {
                 if(btnSi.contiene(x,y)){
                     juego.setScreen(new PantallaCargando(juego));
-                    estadoJuego=EstadosJuego.JUGANDO;
+                    estadoJuego= EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
                     juego.setScreen(new Menu(juego));
-                    estadoJuego=EstadosJuego.PERDIO;
+                    estadoJuego= EstadosJuego.PERDIO;
                 }
-            }  else if (estadoJuego==EstadosJuego.GANO) {
+            }  else if (estadoJuego== EstadosJuego.GANO) {
                 if(btnSi.contiene(x,y)){
                     juego.setScreen(new PantallaCargando(juego));
-                    estadoJuego=EstadosJuego.JUGANDO;
+                    estadoJuego= EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
                     juego.setScreen(new Menu(juego));
-                    estadoJuego=EstadosJuego.PERDIO;
+                    estadoJuego= EstadosJuego.PERDIO;
                 }
             }
             return true;    // Indica que ya procesó el evento
