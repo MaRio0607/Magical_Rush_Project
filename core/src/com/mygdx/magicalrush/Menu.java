@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -40,6 +41,9 @@ public class Menu implements Screen
 
     //musica
     private Music music;
+    //sonido
+    private Sound btn;
+    private Sound play;
 
     public Menu(Juego juego) {
         this.juego = juego;
@@ -65,6 +69,10 @@ public class Menu implements Screen
         crearObjetos();
 
         Gdx.input.setInputProcessor(new ProcesadorEntrada());
+        btn=Gdx.audio.newSound(Gdx.files.internal("btn/btn.mp3"));
+        play=Gdx.audio.newSound(Gdx.files.internal("btn/Play.mp3"));
+
+
 
         //musica
         juego.reproducir(Juego.TipodeMusica.MENU);
@@ -75,16 +83,17 @@ public class Menu implements Screen
         // Cargar las texturas/mapas
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
 
-
+        // Texturas de los botones
         assetManager.load("fondo_A.png", Texture.class);    // Cargar imagen
         assetManager.load("magical_rush.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("about.png", Texture.class);
         assetManager.load("inst.png",Texture.class);
         assetManager.load("play.png", Texture.class);
+        // Audio
         assetManager.load("musica/Menu.mp3", Music.class);
-        // Texturas de los botones
-
+        assetManager.load("btn/btn.mp3", Sound.class);
+        assetManager.load("btn/Play.mp3", Sound.class);
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
     }
@@ -170,7 +179,9 @@ public class Menu implements Screen
         assetManager.unload("play.png");
         assetManager.unload("about.png");
         assetManager.unload("inst.png");
-
+        assetManager.unload("musica/Menu.mp3");
+        assetManager.unload("btn/btn.mp3");
+        assetManager.unload("btn/Play.mp3");
         music.stop();
     }
 
@@ -191,7 +202,14 @@ public class Menu implements Screen
         @Override
         public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             transformarCoordenadas(screenX, screenY);
+            if (btnAbout.contiene(x,y)){
+                btn.play();
 
+            }else if (btnInst.contiene(x,y)){
+                btn.play();
+            }else if (btnPlay.contiene(x,y)){
+                play.play();
+            }
             return true;    // Indica que ya procesó el evento
         }
 
@@ -204,13 +222,15 @@ public class Menu implements Screen
 
             if (btnPlay.contiene(x,y)){
                 juego.setScreen(new PantallaCargando(juego));
-
                 juego.detener();
 
             } else if (btnAbout.contiene(x,y)){
+                btn.play();
                 juego.setScreen(new AcercaDe(juego));
             }else if (btnInst.contiene(x,y)){
                 juego.setScreen(new Instrucciones(juego));
+                //juego.assetManager.get("btn/btn.mp3", Sound.class).play();
+
             }
             return true;    // Indica que ya procesó el evento
         }
