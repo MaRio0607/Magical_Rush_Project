@@ -225,7 +225,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("SHOOT.png",Texture.class);
         assetManager.load("btones.png",Texture.class);
         assetManager.load("PausaBoton.png",Texture.class);
-        assetManager.load("nubes.png",Texture.class);
+        assetManager.load("fondo.png",Texture.class);
         //ITEM
         assetManager.load("Key_Item.png", Texture.class);
         assetManager.load("Vida_Item.png", Texture.class);
@@ -263,7 +263,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private void crearObjetos() {
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
         //fondo
-        texturaNubes = assetManager.get("nubes.png");
+        texturaNubes = assetManager.get("fondo.png");
         // Carga el mapa en memoria
         mapa = assetManager.get("SegundoNivel.tmx");
 
@@ -882,7 +882,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
         assetManager.unload("SegundoNivel.tmx");
-        assetManager.unload("nubes.png");
+        assetManager.unload("fondo.png");
 
         assetManager.unload("Key_Item.png");
         assetManager.unload("Vida_Item.png");
