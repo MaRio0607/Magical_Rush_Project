@@ -43,6 +43,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
     private Personaje rui;
     public static final int TAM_CELDA = 16;
+    private boolean hit;
 
     private Torauma torauma;
     private Texture texturaTorauma;
@@ -282,6 +283,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         rui.setVida(3);
         rui.setEnergia(5);
+        hit = false;
 
         torauma.setVida(72);
 
@@ -459,6 +461,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         {
             estadoJuego = EstadosJuego.GANO;
         }
+        if( rui.getX() >= torauma.getX() && (torauma.getX()+torauma.getSprite().getWidth()) >= (rui.getX()+rui.getSprite().getWidth()) )
+        {
+            if(rui.getY() <= (torauma.getY() + torauma.getSprite().getHeight()) && hit == false )
+            {
+                rui.setVida(rui.getVida() - 1);
+                hit = true;
+            }
+        }
+        else{
+            hit = false;
+        }
+
     }
 
     private void pantallaPerdio(SpriteBatch batch)
