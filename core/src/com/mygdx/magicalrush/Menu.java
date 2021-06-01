@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,8 +38,14 @@ public class Menu implements Screen
     private Boton btnAbout;
     private Boton btnInst;
 
+    //musica
+    private Music music;
+
     public Menu(Juego juego) {
         this.juego = juego;
+        music = juego.assetManager.get("musica/Menu.mp3",Music.class);
+        music.setLooping(true);
+        music.play();
     }
 
     /*
@@ -58,6 +65,9 @@ public class Menu implements Screen
         crearObjetos();
 
         Gdx.input.setInputProcessor(new ProcesadorEntrada());
+
+        //musica
+        juego.reproducir(Juego.TipodeMusica.MENU);
     }
 
     // Carga los recursos a través del administrador de assets
@@ -72,6 +82,7 @@ public class Menu implements Screen
         assetManager.load("about.png", Texture.class);
         assetManager.load("inst.png",Texture.class);
         assetManager.load("play.png", Texture.class);
+        assetManager.load("musica/Menu.mp3", Music.class);
         // Texturas de los botones
 
         // Se bloquea hasta que cargue todos los recursos
@@ -95,6 +106,7 @@ public class Menu implements Screen
         btnPlay.setPosicion(490,350);
         btnInst=new Boton(texturaInst);
         btnInst.setPosicion(450,250);
+
 
     }
 
@@ -158,6 +170,8 @@ public class Menu implements Screen
         assetManager.unload("play.png");
         assetManager.unload("about.png");
         assetManager.unload("inst.png");
+
+        music.stop();
     }
 
     /*
@@ -190,6 +204,9 @@ public class Menu implements Screen
 
             if (btnPlay.contiene(x,y)){
                 juego.setScreen(new PantallaCargando(juego));
+
+                juego.detener();
+
             } else if (btnAbout.contiene(x,y)){
                 juego.setScreen(new AcercaDe(juego));
             }else if (btnInst.contiene(x,y)){

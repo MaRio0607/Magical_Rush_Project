@@ -27,6 +27,7 @@ public class Juego extends Game
         // Agregamos un loader para los mapas
         assetManager.setLoader(TiledMap.class,
                 new TmxMapLoader(new InternalFileHandleResolver()));
+        assetManager.load("musica/Menu.mp3", Music.class);
         assetManager.load("musica/Nivel.mp3", Music.class);
         assetManager.load("musica/BOSS.mp3", Music.class);
         assetManager.finishLoading();
@@ -44,7 +45,7 @@ public class Juego extends Game
 
         switch (tipodeMusica){
             case MENU:
-                fondo = assetManager.get("musica/menu.mp3");
+                fondo = assetManager.get("musica/Menu.mp3");
                 break;
             case NIVEL:
                 fondo = assetManager.get("musica/Nivel.mp3");
