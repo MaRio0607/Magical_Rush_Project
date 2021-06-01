@@ -111,7 +111,7 @@ public class PantallaCargando implements Screen
 
         if (assetManager.update()) {
             // Terminó la carga, cambiar de pantalla
-            juego.setScreen(new PantallaJuego(juego));
+            juego.setScreen(new NivelDos(juego));
         } else {
             // Aún no termina la carga de assets, leer el avance
             float avance = assetManager.getProgress()*100;

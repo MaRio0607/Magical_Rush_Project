@@ -101,9 +101,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture puertaTexture;
 
     private Array<Item> arrItem;
-    private Item key;
-    private Item vida;
-    private Item energia;
+    private Item key, key2, key3;
+    private Item vida, vidaS, vidaT;
+    private Item energia, energiaS, energiaT, energiaF, energiaFt;
     private Item puerta;
     private int keyCount;
     private int keyNeed;
@@ -287,7 +287,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         rui.setVida(2);
         rui.setEnergia(0);
         keyCount=0;
-        keyNeed=1;
+        keyNeed=3;
 
         //Variables para conocer la posición del enemigo en el mapa
         re = 0;
@@ -327,10 +327,21 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         No = assetManager.get("No.png");
 
 
-        key = new Item(keyTexture, 640, 340, 1);
-        vida = new Item(vidaTexture, 965, 635, 2);
-        energia = new Item(energiaTexture, 250, 750, 3);
-        puerta = new Item(puertaTexture, 1412,608,4);
+        key = new Item(keyTexture, 820, 1000, 1);
+        key2 = new Item(keyTexture, 1550, 1150,1);
+        key3 = new Item(keyTexture, 1300, 700, 1);
+
+        vida = new Item(vidaTexture, 1550, 1465, 2);
+        vidaS = new Item(vidaTexture, 20, 710, 2);
+        vidaT = new Item(vidaTexture, 150, 1135, 2);
+
+        energia = new Item(energiaTexture, 250, 1465, 3);
+        energiaS = new Item(energiaTexture, 1000, 1465, 3);
+        energiaT = new Item(energiaTexture, 1150, 1200, 3);
+        energiaF = new Item(energiaTexture, 750, 1135, 3);
+        energiaFt = new Item(energiaTexture, 20, 1100, 3);
+
+        puerta = new Item(puertaTexture, 1412,670,4);
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),1600);
@@ -409,8 +420,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         UI(batch);
 
         key.render(batch);
+        key2.render(batch);
+        key3.render(batch);
+
         vida.render(batch);
+        vidaS.render(batch);
+        vidaT.render(batch);
+
         energia.render(batch);
+        energiaS.render(batch);
+        energiaT.render(batch);
+        energiaF.render(batch);
+        energiaFt.render(batch);
+
         puerta.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
@@ -536,8 +558,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private void actualizarItems() {
         arrItem=new Array<>();
         arrItem.add(key);
+        arrItem.add(key2);
+        arrItem.add(key3);
+
         arrItem.add(vida);
+        arrItem.add(vidaS);
+        arrItem.add(vidaT);
+
         arrItem.add(energia);
+        arrItem.add(energiaS);
+        arrItem.add(energiaT);
+        arrItem.add(energiaF);
+        arrItem.add(energiaFt);
+
         arrItem.add(puerta);
         for (int i=0; i<arrItem.size; i++) {
             Item it = arrItem.get(i);
@@ -945,7 +978,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
                     estadoJuego= EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
-                    juego.setScreen(new PantallaCargando(juego));
+                    juego.setScreen(new NivelDos(juego));
                     estadoJuego= EstadosJuego.JUGANDO;
                 }
             }  else if (estadoJuego== EstadosJuego.PERDIO) {
