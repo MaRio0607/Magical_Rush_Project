@@ -96,6 +96,7 @@ public class PantallaJuego implements Screen
     private Texture texturePausa;
     private Boton btnPausa;
 
+
     private ProcesadorEntrada procesadorEntrada;
 
     // Estados del juego
@@ -154,7 +155,10 @@ public class PantallaJuego implements Screen
 
     //musica
     private Music music;
-
+    //sonido
+    private Sound Ssalto;
+    private Sound Sdisp;
+    private Sound Smov;
 
 
     public PantallaJuego(Juego juego) {
@@ -191,6 +195,9 @@ public class PantallaJuego implements Screen
         procesadorEntrada=new ProcesadorEntrada();
         Gdx.input.setInputProcessor(procesadorEntrada);
 
+        Ssalto=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/saltoRui.mp3"));
+        Sdisp=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/Atack.mp3"));
+        Smov=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/pasosRui.mp3"));
         //Dibuja rectangulos que son usados para hitboxes
         r1 = new Rectangle(0, 800, 604, 800);
         r2 = new Rectangle(280, 849, 398, 175);
@@ -262,8 +269,8 @@ public class PantallaJuego implements Screen
         assetManager.load("No.png", Texture.class);
         //sonido
         assetManager.load("musica/Nivel.mp3", Music.class);
-
-
+        assetManager.load("Audio/Rui/saltoRui.mp3", Sound.class);
+        assetManager.load("Audio/Rui/Atack.mp3", Sound.class);
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
     }
@@ -855,6 +862,8 @@ public class PantallaJuego implements Screen
         assetManager.unload("despertaste_continuar.png");
         assetManager.unload("Si.png");
         assetManager.unload("No.png");
+
+        assetManager.unload("");
         music.stop();
 
     }
@@ -880,19 +889,25 @@ public class PantallaJuego implements Screen
             if (estadoJuego==EstadosJuego.JUGANDO) {
                 // Preguntar si las coordenadas están sobre el botón derecho
                 if (btnDerecha.contiene(x, y) && rui.getEstadoMovimiento() != Personaje.EstadoMovimiento.INICIANDO) {
+                    Smov.play();
+                    Smov.loop();
                     // Tocó el botón derecha, hacer que el personaje se mueva a la derecha
                     rui.setEstadoMovimiento(Personaje.EstadoMovimiento.MOV_DERECHA);
 
                 } else if (btnIzquierda.contiene(x, y) && rui.getEstadoMovimiento() != Personaje.EstadoMovimiento.INICIANDO) {
+                    Smov.play();
+                    Smov.loop();
                     // Tocó el botón izquierda, hacer que el personaje se mueva a la izquierda
                     rui.setEstadoMovimiento(Personaje.EstadoMovimiento.MOV_IZQUIERDA);
 
                 } else if (btnSalto.contiene(x, y)) {
+                    Ssalto.play();
                     // Tocó el botón saltar
                     rui.saltar();
                 } else if ((btnPausa.contiene(x, y))) {
                     estadoJuego=EstadosJuego.PAUSADO;
                 }else if (btnDisp.contiene(x,y)){
+                    Sdisp.play();
                     //Dispara hacia la derecha si esta viendo en esa dirección
                     if(rui.getLRight() == true)
                     {
@@ -954,7 +969,18 @@ public class PantallaJuego implements Screen
          */
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-            transformarCoordenadas(screenX, screenY);
+            if (estadoJuego==EstadosJuego.JUGANDO) {
+                // Preguntar si las coordenadas están sobre el botón derecho
+                if (btnDerecha.contiene(x, y) && rui.getEstadoMovimiento() != Personaje.EstadoMovimiento.INICIANDO) {
+                    Smov.stop();
+
+
+                } else if (btnIzquierda.contiene(x, y) && rui.getEstadoMovimiento() != Personaje.EstadoMovimiento.INICIANDO) {
+                    Smov.stop();
+
+                }
+            }
+                transformarCoordenadas(screenX, screenY);
             // Preguntar si las coordenadas son de algún botón para DETENER el movimiento
             if ( rui.getEstadoMovimiento()!= Personaje.EstadoMovimiento.INICIANDO && (btnDerecha.contiene(x, y) || btnIzquierda.contiene(x,y)) ) {
                 // Tocó el botón derecha, hacer que el personaje se mueva a la derecha
