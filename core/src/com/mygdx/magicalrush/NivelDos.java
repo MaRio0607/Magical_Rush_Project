@@ -460,7 +460,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private void pantallaPerdio(SpriteBatch batch)
     {
-        System.out.println("PERDISTE :(");
+        batch.draw(pantallaPierde, (pantallaPierde.getWidth()-(pantallaPierde.getWidth()/3)),(pantallaPierde.getHeight()-(pantallaPierde.getHeight()/2)));
+        btnSi.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*3) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
+        btnSi.render(batch);
+        btnNo.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*8) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
+        btnNo.render(batch);
     }
 
     private void pantallaGana(SpriteBatch batch) {
