@@ -23,6 +23,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     public class NivelTres implements Screen
 
 {
+
+    //Nivel 3 Terminado, NOTA PROFESOR ROMÁN
     public static final float ANCHO_MAPA = 1600;   // Ancho del mapa en pixeles
     public static final float ALTO_MAPA = 1100;    // Alto del mapa en pixeles
 
