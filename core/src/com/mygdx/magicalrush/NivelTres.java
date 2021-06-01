@@ -887,8 +887,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 if(btnCont.contiene(x,y)){
                     estadoJuego= EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
-                    juego.setScreen(new Menu(juego));
                     juego.detener();
+                    juego.setScreen(new Menu(juego));
+
 
                     estadoJuego= EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
@@ -901,15 +902,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     estadoJuego= EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
+                    juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego= EstadosJuego.PERDIO;
                 }
             }  else if (estadoJuego== EstadosJuego.GANO) {
                 if(btnSi.contiene(x,y)){
+                    juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego= EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
+                    juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego= EstadosJuego.PERDIO;
                 }

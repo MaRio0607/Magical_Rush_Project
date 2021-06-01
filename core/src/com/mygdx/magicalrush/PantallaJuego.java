@@ -915,8 +915,9 @@ public class PantallaJuego implements Screen
                     estadoJuego=EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
                     juego.setScreen(new PantallaCargando(juego));
-                    estadoJuego=EstadosJuego.JUGANDO;
                     juego.detener();
+                    estadoJuego=EstadosJuego.JUGANDO;
+
                 }
             }  else if (estadoJuego==EstadosJuego.PERDIO) {
                 if(btnSi.contiene(x,y)){
@@ -924,6 +925,7 @@ public class PantallaJuego implements Screen
                     estadoJuego=EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
+                    juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego=EstadosJuego.PERDIO;
                 }
@@ -934,9 +936,10 @@ public class PantallaJuego implements Screen
                  //   juego.detener();
                 }
                 if(btnNo.contiene(x,y)){
+                    juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego=EstadosJuego.PERDIO;
-                    juego.detener();
+                   // juego.detener();
                 }
             }
             return true;    // Indica que ya procesó el evento
