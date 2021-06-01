@@ -964,6 +964,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 if(btnCont.contiene(x,y)){
                     estadoJuego= EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
+                    juego.detener();
                     juego.setScreen(new Menu(juego));
 
                     estadoJuego= EstadosJuego.PERDIO;
