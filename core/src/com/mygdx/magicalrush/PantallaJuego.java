@@ -908,8 +908,9 @@ public class PantallaJuego implements Screen
                 if(btnCont.contiene(x,y)){
                     estadoJuego=EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
-                    juego.setScreen(new Menu(juego));
                     juego.detener();
+                    juego.setScreen(new Menu(juego));
+
 
                     estadoJuego=EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
