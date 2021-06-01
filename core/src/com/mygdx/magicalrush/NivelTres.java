@@ -886,7 +886,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 }
             }  else if (estadoJuego== EstadosJuego.PERDIO) {
                 if(btnSi.contiene(x,y)){
-                    juego.setScreen(new PantallaCargando(juego));
+                    juego.setScreen(new NivelTres(juego));
                     estadoJuego= EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
@@ -895,7 +895,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 }
             }  else if (estadoJuego== EstadosJuego.GANO) {
                 if(btnSi.contiene(x,y)){
-                    juego.setScreen(new PantallaCargando(juego));
+                    juego.setScreen(new Menu(juego));
                     estadoJuego= EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
