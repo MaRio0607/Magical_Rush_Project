@@ -41,10 +41,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     // Personaje
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
-    private Texture texturaEnemigo;
     private Personaje rui;
-    private Slime slime;
     public static final int TAM_CELDA = 16;
+
+    private Torauma torauma;
+    private Texture texturaTorauma;
 
     //Disparo del personaje
     private Array<Disparo> arrBolas;
@@ -103,8 +104,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Array<Item> arrItem;
     private Item vida, vidaS, vidaT;
     private Item energia, energiaS, energiaT, energiaF, energiaFt;
-    private int keyCount;
-    private int keyNeed;
 
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
@@ -113,7 +112,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private Texture vida0, vida1, vida2,vida3;
     private Texture energia0, energia1, energia2, energia3, energia4, energia5;
-    private Texture Llave0, Llave1, Llave2, Llave3;
+    private Texture torauma0, torauma1, torauma2, torauma3, torauma4, torauma5, torauma6, torauma7, torauma8;
 
     //Pausa
     private Texture pantallaPausa;
@@ -235,6 +234,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("despertaste_continuar.png", Texture.class);
         assetManager.load("Si.png", Texture.class);
         assetManager.load("No.png", Texture.class);
+
+        assetManager.load("Tora_anim-Sheet.png", Texture.class);
+        assetManager.load("torauma0.png", Texture.class);
+        assetManager.load("torauma1.png", Texture.class);
+        assetManager.load("torauma2.png", Texture.class);
+        assetManager.load("torauma3.png", Texture.class);
+        assetManager.load("torauma4.png", Texture.class);
+        assetManager.load("torauma5.png", Texture.class);
+        assetManager.load("torauma6.png", Texture.class);
+        assetManager.load("torauma7.png", Texture.class);
+        assetManager.load("torauma8.png", Texture.class);
+
         //sonido
         assetManager.load("musica/BOSS.mp3", Music.class);
 
@@ -255,9 +266,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         // Cargar frames
         texturaPersonaje = assetManager.get("RUIS-Sheet.png");
+        texturaTorauma = assetManager.get("Tora_anim-Sheet.png");
 
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
+        torauma = new Torauma(texturaTorauma);
+
         //Variables para conocer la posición del personaje en el mapa
         re = 0;
         rm = 0;
@@ -268,8 +282,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         rui.setVida(2);
         rui.setEnergia(0);
-        keyCount=0;
-        keyNeed=3;
+
+        torauma.setVida(72);
 
         //ITEM
         vidaTexture = assetManager.get("Vida_Item.png");
@@ -286,6 +300,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         energia3 = assetManager.get("Energia_3.png");
         energia4 = assetManager.get("Energia_4.png");
         energia5 = assetManager.get("Energia_5.png");
+
+        torauma0 = assetManager.get("torauma0.png");
+        torauma1 = assetManager.get("torauma1.png");
+        torauma2 = assetManager.get("torauma2.png");
+        torauma3 = assetManager.get("torauma3.png");
+        torauma4 = assetManager.get("torauma4.png");
+        torauma5 = assetManager.get("torauma5.png");
+        torauma6 = assetManager.get("torauma6.png");
+        torauma7 = assetManager.get("torauma7.png");
+        torauma8 = assetManager.get("torauma8.png");
 
         pantallaPausa = assetManager.get("btones.png");
         pantallaGana = assetManager.get("continuar_nivel.png");
@@ -307,6 +331,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         rui.setPosicion(rui.getX(),900);
         rui.setCL(true);
         rui.setCR(true);
+
+        torauma.setPosicion(1400, 734);
 
         // Crear los botones
         continuar = assetManager.get("Cont_bot.png");
@@ -355,6 +381,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             actualizarCamara(); // Mover la cámara para que siga al personaje
             probarChoqueParedes();
             actualizarItems();
+            actualizarTorauma();
         }
 
         // Dibujar
@@ -376,6 +403,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
         UI(batch);
+        barraTorauma(batch);
 
         vida.render(batch);
         vidaS.render(batch);
@@ -388,6 +416,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         energiaFt.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
+        torauma.render(batch);
 
         //Dibujar bolas de fuego
         for (Disparo bolaFuego:arrBolas){
@@ -418,6 +447,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         }
         batch.end();
 
+    }
+
+    private void actualizarTorauma() {
+
+        if (estadoJuego == EstadosJuego.JUGANDO)
+        {
+            torauma.actualizar();
+        }
+        if(torauma.getVida() == 0)
+        {
+            estadoJuego = EstadosJuego.GANO;
+        }
     }
 
     private void pantallaPerdio(SpriteBatch batch)
@@ -452,8 +493,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     }
 
     private void UI(SpriteBatch batch) {
-
-        System.out.println("Rui X: " + rui.getX() + " Rui Y: " + rui.getY());
 
         switch (rui.getVida()){
             case 0:
@@ -523,11 +562,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                         it.setPosicion(-100,it.getY());
                         arrItem.removeIndex(i);
                     }
-                    if( it.getTipo() == 4 && keyCount == keyNeed )
-                    {
-                        estadoJuego = EstadosJuego.GANO;
-                    }
-
                 }
             }
         }
@@ -621,13 +655,63 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 //borrar el objeto
                 arrBolas.removeIndex(i);
             }
+            if(bolaFuego.getX() >= torauma.getX() && bolaFuego.getX() <= torauma.getX()+torauma.getSprite().getWidth())
+            {
+                if( (bolaFuego.getY() <= torauma.getY() + torauma.getSprite().getHeight()) && (bolaFuego.getY() >= torauma.getY()) )
+                {
+                    arrBolas.removeIndex(i);
+                    torauma.setVida(torauma.getVida()-1);
+                }
+
+            }
         }
     }
 
 
-    /*
-    Movimiento del personaje.
-     */
+    private void barraTorauma(SpriteBatch batch)
+    {
+        if( torauma.getVida() == 0)
+        {
+            this.batch.draw(torauma0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+
+        }
+        if( (torauma.getVida() >= 1) && (torauma.getVida() <= 8) )
+        {
+            this.batch.draw(torauma1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+        if( (torauma.getVida() >= 9) && (torauma.getVida() <= 18) )
+        {
+            this.batch.draw(torauma2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+        if( (torauma.getVida() >= 19) && (torauma.getVida() <= 27) )
+        {
+            this.batch.draw(torauma3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+        if( (torauma.getVida() >= 28) && (torauma.getVida() <= 36) )
+        {
+            this.batch.draw(torauma4, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+        if( (torauma.getVida() >= 37) && (torauma.getVida() <= 45) )
+        {
+            this.batch.draw(torauma5, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+        if( (torauma.getVida() >= 46) && (torauma.getVida() <= 54) )
+        {
+            this.batch.draw(torauma6, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+        if( (torauma.getVida() >= 55) && (torauma.getVida() <= 63) )
+        {
+            this.batch.draw(torauma7, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+        if( (torauma.getVida() >= 64) && (torauma.getVida() <= 72) )
+        {
+            this.batch.draw(torauma8, (camara.position.x-(Juego.ANCHO_CAMARA/2)+425), camara.position.y+(Juego.ALTO_CAMARA/2)-125);
+        }
+    }
+
+
+    //Movimiento del personaje.
+
     private void moverPersonaje() {
         // Prueba caída libre inicial o movimiento horizontal
         switch (rui.getEstadoMovimiento()) {
@@ -830,6 +914,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("despertaste_continuar.png");
         assetManager.unload("Si.png");
         assetManager.unload("No.png");
+
+        assetManager.unload("Tora_anim-Sheet.png");
+
+        assetManager.unload("torauma0.png");
+        assetManager.unload("torauma1.png");
+        assetManager.unload("torauma2.png");
+        assetManager.unload("torauma3.png");
+        assetManager.unload("torauma4.png");
+        assetManager.unload("torauma5.png");
+        assetManager.unload("torauma6.png");
+        assetManager.unload("torauma7.png");
+        assetManager.unload("torauma8.png");
+
         music.stop();
 
     }

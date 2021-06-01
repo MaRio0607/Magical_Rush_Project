@@ -33,5 +33,6 @@ public class Disparo extends Objeto{
     public float getX() {
         return sprite.getX();
     }
+    public float getY() { return  sprite.getY(); }
 
 }
