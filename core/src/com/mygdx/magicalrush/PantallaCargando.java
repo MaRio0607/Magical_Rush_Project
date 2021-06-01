@@ -3,6 +3,7 @@ package com.mygdx.magicalrush;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -77,6 +78,8 @@ public class PantallaCargando implements Screen
         assetManager.load("derecha.png", Texture.class);
         assetManager.load("izquierda.png", Texture.class);
         assetManager.load("salto.png", Texture.class);
+        assetManager.load("musica/Nivel.mp3", Music.class);
+
         // Fin del juego
         //assetManager.load("archivo.png", Texture.class);
 

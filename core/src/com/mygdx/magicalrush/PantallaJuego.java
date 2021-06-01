@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -151,9 +152,16 @@ public class PantallaJuego implements Screen
     private float xFondo = 0;
     private float yFondo = 0;
 
+    //musica
+    private Music music;
+
+
 
     public PantallaJuego(Juego juego) {
         this.juego = juego;
+        music = juego.assetManager.get("musica/Nivel.mp3",Music.class);
+        music.setLooping(true);
+        music.play();
     }
 
     /*
@@ -198,6 +206,9 @@ public class PantallaJuego implements Screen
         r11 = new Rectangle(1166, 674, 22, 10);
 
         marcador = new Rectangle(1601, 647, 20, 10);
+
+        //musica
+      juego.reproducir(Juego.TipodeMusica.NIVEL);
 
     }
 
@@ -249,12 +260,16 @@ public class PantallaJuego implements Screen
         assetManager.load("despertaste_continuar.png", Texture.class);
         assetManager.load("Si.png", Texture.class);
         assetManager.load("No.png", Texture.class);
+        //sonido
+        assetManager.load("musica/Nivel.mp3", Music.class);
+
 
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
     }
 
     private void crearObjetos() {
+
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
         //fondo
         texturaNubes = assetManager.get("nubes.png");
@@ -836,6 +851,7 @@ public class PantallaJuego implements Screen
         assetManager.unload("despertaste_continuar.png");
         assetManager.unload("Si.png");
         assetManager.unload("No.png");
+        music.stop();
 
     }
 
@@ -893,11 +909,13 @@ public class PantallaJuego implements Screen
                     estadoJuego=EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
                     juego.setScreen(new Menu(juego));
+                    juego.detener();
 
                     estadoJuego=EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
                     juego.setScreen(new PantallaCargando(juego));
                     estadoJuego=EstadosJuego.JUGANDO;
+                    juego.detener();
                 }
             }  else if (estadoJuego==EstadosJuego.PERDIO) {
                 if(btnSi.contiene(x,y)){
@@ -912,10 +930,12 @@ public class PantallaJuego implements Screen
                 if(btnSi.contiene(x,y)){
                     juego.setScreen(new NivelDos(juego));
                     estadoJuego=EstadosJuego.JUGANDO;
+                 //   juego.detener();
                 }
                 if(btnNo.contiene(x,y)){
                     juego.setScreen(new Menu(juego));
                     estadoJuego=EstadosJuego.PERDIO;
+                    juego.detener();
                 }
             }
             return true;    // Indica que ya procesó el evento

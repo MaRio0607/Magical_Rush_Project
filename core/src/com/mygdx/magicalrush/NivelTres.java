@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.MusicLoader;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -133,10 +134,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture texturaNubes;
     private float xFondo = 0;
     private float yFondo = 0;
+    //musica
+    private Music music;
 
 
     public NivelTres(Juego juego) {
         this.juego = juego;
+        music = juego.assetManager.get("musica/BOSS.mp3", Music.class);
+        music.setLooping(true);
+        music.play();
     }
 
     /*
@@ -184,6 +190,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         marcador = new Rectangle(1601, 647, 20, 10);
         marcador0 = new Rectangle(-100,730, 50,161);
 
+        juego.reproducir(Juego.TipodeMusica.JEFE);
     }
 
     private void crearBolas() {
@@ -228,6 +235,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("despertaste_continuar.png", Texture.class);
         assetManager.load("Si.png", Texture.class);
         assetManager.load("No.png", Texture.class);
+        //sonido
+        assetManager.load("musica/BOSS.mp3", Music.class);
 
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
@@ -821,6 +830,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("despertaste_continuar.png");
         assetManager.unload("Si.png");
         assetManager.unload("No.png");
+        music.stop();
 
     }
 
@@ -878,6 +888,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     estadoJuego= EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
                     juego.setScreen(new Menu(juego));
+                    juego.detener();
 
                     estadoJuego= EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
