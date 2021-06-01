@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.MusicLoader;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,7 +18,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 
-    public class NivelDos implements Screen
+    public class NivelTres implements Screen
 
 {
     public static final float ANCHO_MAPA = 1600;   // Ancho del mapa en pixeles
@@ -95,24 +96,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private float reM;
 
     //Items
-    private Texture keyTexture;
     private Texture vidaTexture;
     private Texture energiaTexture;
-    private Texture puertaTexture;
 
     private Array<Item> arrItem;
-    private Item key, key2, key3;
     private Item vida, vidaS, vidaT;
     private Item energia, energiaS, energiaT, energiaF, energiaFt;
-    private Item puerta;
     private int keyCount;
     private int keyNeed;
 
     private Array<Rectangle> arrHitbox;
     private Rectangle r1 , r2, r3, r4, r5;
-    private Rectangle r6, r7, r8, r9, r10, r11;
-    private Rectangle r12, r13, r14, r15, r16, r17;
-    private Rectangle r18, r19, r20, r21, r22, r23, r24, r25, r26, r27;
+    private Rectangle r6, r7, r8, r9, r10, r11, r12;
     private Rectangle marcador, marcador0;
 
     private Texture vida0, vida1, vida2,vida3;
@@ -140,7 +135,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private float yFondo = 0;
 
 
-    public NivelDos(Juego juego) {
+    public NivelTres(Juego juego) {
         this.juego = juego;
     }
 
@@ -172,36 +167,19 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         Gdx.input.setInputProcessor(procesadorEntrada);
 
         //Dibuja rectangulos que son usados para hitboxes
-        r1 = new Rectangle(0, 1500, 1052, 400);
-        r2 = new Rectangle(1155, 1503, 440, 250);
-        r3 = new Rectangle(1005, 1185, 600, 150);
-        r4 = new Rectangle(750, 1055, 300, 10);
-        r5 = new Rectangle(85, 1185, 705, 200);
-        r6 = new Rectangle(1500, 1075, 100, 10);
-        r7 = new Rectangle(0, 735, 1600, 10);
+        r1 = new Rectangle(0, 800, 1600, 10);
+        r2 = new Rectangle(120, 865, 90, 10);
+        r3 = new Rectangle(120, 930, 90, 10);
+        r4 = new Rectangle(120, 993, 90, 10);
+        r5 = new Rectangle(1335, 865, 90, 10);
+        r6 = new Rectangle(1335, 930, 90, 10);
+        r7 = new Rectangle(1335, 993, 90, 10);
 
-        r8 = new Rectangle(1050, 1490, 50, 10);
-        r9 = new Rectangle(1140, 1503, 50, 10);
-        r10 = new Rectangle(1100, 1440, 60, 10);
-        r11 = new Rectangle(1050, 1395, 50, 10);
-        r12 = new Rectangle(1100, 1345, 60, 10);
-        r13 = new Rectangle(1050, 1295, 50, 10);
-        r14 = new Rectangle(1100, 1245, 85, 10);
-        r15 = new Rectangle(1200, 1220, 50, 10);
-
-        r16 = new Rectangle(790, 1150, 50, 10);
-        r17 = new Rectangle(837, 1120, 67, 10);
-        r18 = new Rectangle(893, 1088, 70, 10);
-
-        r19 = new Rectangle(0, 1153, 50, 10);
-        r20 = new Rectangle(0, 1123, 50, 10);
-        r21 = new Rectangle(0, 1148, 50, 10);
-        r22 = new Rectangle(0, 1085, 50, 10);
-        r23 = new Rectangle(0, 1022, 50, 10);
-        r24 = new Rectangle(0, 959, 50, 10);
-        r25 = new Rectangle(0, 896, 50, 10);
-        r26 = new Rectangle(0, 833, 50, 10);
-        r27 = new Rectangle(0, 770, 50, 10);
+        r8 = new Rectangle(418, 865, 95, 10);
+        r9 = new Rectangle(553, 910, 95, 10);
+        r10 = new Rectangle(677, 955, 166, 10);
+        r11 = new Rectangle(870, 910, 95, 10);
+        r12 = new Rectangle(1010, 865, 95, 10);
 
         marcador = new Rectangle(1601, 647, 20, 10);
         marcador0 = new Rectangle(-100,730, 50,161);
@@ -232,11 +210,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("Energia_Item.png", Texture.class);
         assetManager.load("puerta.png", Texture.class);
 
-        assetManager.load("Vida_0.png", Texture.class);
-        assetManager.load("Vida_1.png", Texture.class);
-        assetManager.load("Vida_2.png", Texture.class);
-        assetManager.load("Vida_3.png", Texture.class);
-
         assetManager.load("Energia_0.png", Texture.class);
         assetManager.load("Energia_1.png", Texture.class);
         assetManager.load("Energia_2.png", Texture.class);
@@ -244,10 +217,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("Energia_4.png", Texture.class);
         assetManager.load("Energia_5.png", Texture.class);
 
-        assetManager.load("Llave_0.png", Texture.class);
-        assetManager.load("Llave_1.png", Texture.class);
-        assetManager.load("Llave_2.png", Texture.class);
-        assetManager.load("Llave_3.png", Texture.class);
+        assetManager.load("Vida_0.png", Texture.class);
+        assetManager.load("Vida_1.png", Texture.class);
+        assetManager.load("Vida_2.png", Texture.class);
+        assetManager.load("Vida_3.png", Texture.class);
 
         assetManager.load("btones.png", Texture.class);
 
@@ -265,7 +238,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         //fondo
         texturaNubes = assetManager.get("nubes.png");
         // Carga el mapa en memoria
-        mapa = assetManager.get("SegundoNivel.tmx");
+        mapa = assetManager.get("TercerNivel.tmx");
 
         // Crear el objeto que dibujará el mapa
         rendererMapa = new OrthogonalTiledMapRenderer(mapa,batch);
@@ -290,10 +263,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         keyNeed=3;
 
         //ITEM
-        keyTexture = assetManager.get("Key_Item.png");
         vidaTexture = assetManager.get("Vida_Item.png");
         energiaTexture = assetManager.get("Energia_Item.png");
-        puertaTexture = assetManager.get("puerta.png");
 
         vida0 = assetManager.get("Vida_0.png");
         vida1 = assetManager.get("Vida_1.png");
@@ -307,36 +278,24 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         energia4 = assetManager.get("Energia_4.png");
         energia5 = assetManager.get("Energia_5.png");
 
-        Llave0 = assetManager.get("Llave_0.png");
-        Llave1 = assetManager.get("Llave_1.png");
-        Llave2 = assetManager.get("Llave_2.png");
-        Llave3 = assetManager.get("Llave_3.png");
-
         pantallaPausa = assetManager.get("btones.png");
         pantallaGana = assetManager.get("continuar_nivel.png");
         pantallaPierde = assetManager.get("despertaste_continuar.png");
         Si = assetManager.get("Si.png");
         No = assetManager.get("No.png");
 
+        vida = new Item(vidaTexture, 100, 800, 2);
+        vidaS = new Item(vidaTexture, 100, 800, 2);
+        vidaT = new Item(vidaTexture, 100, 800, 2);
 
-        key = new Item(keyTexture, 820, 1000, 1);
-        key2 = new Item(keyTexture, 1550, 1150,1);
-        key3 = new Item(keyTexture, 1300, 700, 1);
-
-        vida = new Item(vidaTexture, 1550, 1465, 2);
-        vidaS = new Item(vidaTexture, 20, 710, 2);
-        vidaT = new Item(vidaTexture, 150, 1135, 2);
-
-        energia = new Item(energiaTexture, 250, 1465, 3);
-        energiaS = new Item(energiaTexture, 1000, 1465, 3);
-        energiaT = new Item(energiaTexture, 1150, 1200, 3);
-        energiaF = new Item(energiaTexture, 750, 1135, 3);
-        energiaFt = new Item(energiaTexture, 20, 1100, 3);
-
-        puerta = new Item(puertaTexture, 1412,670,4);
+        energia = new Item(energiaTexture, 100, 800, 3);
+        energiaS = new Item(energiaTexture, 100, 800, 3);
+        energiaT = new Item(energiaTexture, 100, 800, 3);
+        energiaF = new Item(energiaTexture, 100, 800, 3);
+        energiaFt = new Item(energiaTexture, 100, 800, 3);
 
         // Posición inicial del personaje
-        rui.setPosicion(rui.getX(),1600);
+        rui.setPosicion(rui.getX(),900);
         rui.setCL(true);
         rui.setCR(true);
 
@@ -409,10 +368,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         batch.begin();
         UI(batch);
 
-        key.render(batch);
-        key2.render(batch);
-        key3.render(batch);
-
         vida.render(batch);
         vidaS.render(batch);
         vidaT.render(batch);
@@ -422,8 +377,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         energiaT.render(batch);
         energiaF.render(batch);
         energiaFt.render(batch);
-
-        puerta.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
 
@@ -491,6 +444,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private void UI(SpriteBatch batch) {
 
+        System.out.println("Rui X: " + rui.getX() + " Rui Y: " + rui.getY());
+
         switch (rui.getVida()){
             case 0:
                 batch.draw(vida0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+30), camara.position.y+(Juego.ALTO_CAMARA/2)-70);
@@ -526,30 +481,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 batch.draw(energia5, (camara.position.x-(Juego.ANCHO_CAMARA/2)+320), camara.position.y+(Juego.ALTO_CAMARA/2)-75);
                 break;
         }
-
-        switch (keyCount){
-            case 0:
-                batch.draw(Llave0, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
-                break;
-            case 1:
-                batch.draw(Llave1, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
-                break;
-            case 2:
-                batch.draw(Llave2, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
-                break;
-            case 3:
-                batch.draw(Llave3, (camara.position.x-(Juego.ANCHO_CAMARA/2)+950), camara.position.y+(Juego.ALTO_CAMARA/2)-80);
-                break;
-        }
-
-
     }
 
     private void actualizarItems() {
         arrItem=new Array<>();
-        arrItem.add(key);
-        arrItem.add(key2);
-        arrItem.add(key3);
 
         arrItem.add(vida);
         arrItem.add(vidaS);
@@ -561,19 +496,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         arrItem.add(energiaF);
         arrItem.add(energiaFt);
 
-        arrItem.add(puerta);
         for (int i=0; i<arrItem.size; i++) {
             Item it = arrItem.get(i);
             if( ((rui.getX()+52) >= it.getX()) && ((rui.getX() < it.getX()+30)) )
             {
                 if(((rui.getY()+72) >= it.getY()) && (rui.getY()-70 < it.getY()) )
                 {
-                    if(it.getTipo() == 1)
-                    {
-                        keyCount ++;
-                        it.setPosicion(-100,it.getY());
-                        arrItem.removeIndex(i);
-                    }
                     if(it.getTipo() == 2)
                     {
                         rui.setVida(rui.getVida()+1);
@@ -735,21 +663,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         arrHitbox.add(r10);
         arrHitbox.add(r11);
         arrHitbox.add(r12);
-        arrHitbox.add(r13);
-        arrHitbox.add(r14);
-        arrHitbox.add(r15);
-        arrHitbox.add(r16);
-        arrHitbox.add(r17);
-        arrHitbox.add(r18);
-        arrHitbox.add(r19);
-        arrHitbox.add(r20);
-        arrHitbox.add(r21);
-        arrHitbox.add(r22);
-        arrHitbox.add(r23);
-        arrHitbox.add(r24);
-        arrHitbox.add(r25);
-        arrHitbox.add(r26);
-        arrHitbox.add(r27);
         arrHitbox.add(marcador);
         arrHitbox.add(marcador0);
         //Verifica si esta dentro de las x de alguno de los rectangulos
@@ -787,7 +700,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 }
             }
         }
-        reS = -200;
+        reS = -150;
         reM = 1800;
         reI = 1800;
 
@@ -877,7 +790,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("salto.png");
         assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
-        assetManager.unload("SegundoNivel.tmx");
+        assetManager.unload("TercerNivel.tmx");
         assetManager.unload("nubes.png");
 
         assetManager.unload("Key_Item.png");
@@ -968,7 +881,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
                     estadoJuego= EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
-                    juego.setScreen(new NivelDos(juego));
+                    juego.setScreen(new NivelTres(juego));
                     estadoJuego= EstadosJuego.JUGANDO;
                 }
             }  else if (estadoJuego== EstadosJuego.PERDIO) {

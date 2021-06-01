@@ -71,6 +71,7 @@ public class PantallaCargando implements Screen
         // Carga los recursos de la siguiente pantalla (PantallaJuego)
         assetManager.load("Mapa.tmx", TiledMap.class);  // Cargar info del mapa456124165214378494
         assetManager.load("SegundoNivel.tmx", TiledMap.class);
+        assetManager.load("TercerNivel.tmx", TiledMap.class);
         assetManager.load("RUIS-Sheet.png", Texture.class);    // Cargar imagen
         // Texturas de los botones
         assetManager.load("derecha.png", Texture.class);
@@ -111,7 +112,7 @@ public class PantallaCargando implements Screen
 
         if (assetManager.update()) {
             // Terminó la carga, cambiar de pantalla
-            juego.setScreen(new NivelDos(juego));
+            juego.setScreen(new NivelTres(juego));
         } else {
             // Aún no termina la carga de assets, leer el avance
             float avance = assetManager.getProgress()*100;
