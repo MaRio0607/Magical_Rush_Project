@@ -230,7 +230,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         assetManager.load("btones.png", Texture.class);
 
-        assetManager.load("continuar_nivel.png", Texture.class);
+        assetManager.load("Finish.png", Texture.class);
         assetManager.load("despertaste_continuar.png", Texture.class);
         assetManager.load("Si.png", Texture.class);
         assetManager.load("No.png", Texture.class);
@@ -280,8 +280,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         reS = 0;
         reM = 1600;
 
-        rui.setVida(2);
-        rui.setEnergia(0);
+        rui.setVida(3);
+        rui.setEnergia(5);
 
         torauma.setVida(72);
 
@@ -312,7 +312,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         torauma8 = assetManager.get("torauma8.png");
 
         pantallaPausa = assetManager.get("btones.png");
-        pantallaGana = assetManager.get("continuar_nivel.png");
+        pantallaGana = assetManager.get("Finish.png");
         pantallaPierde = assetManager.get("despertaste_continuar.png");
         Si = assetManager.get("Si.png");
         No = assetManager.get("No.png");
@@ -464,15 +464,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private void pantallaPerdio(SpriteBatch batch)
     {
         System.out.println("PERDISTE :(");
+        batch.draw(pantallaPierde, (pantallaPierde.getWidth()-(pantallaPierde.getWidth()/3)),(pantallaPierde.getHeight()-(pantallaPierde.getHeight()/2)));
+        btnSi.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*3) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
+        btnSi.render(batch);
+        btnNo.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*8) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
+        btnNo.render(batch);
     }
 
     private void pantallaGana(SpriteBatch batch) {
 
         batch.draw(pantallaGana, (pantallaGana.getWidth()-(pantallaGana.getWidth()/3)),(pantallaGana.getHeight()-(pantallaGana.getHeight()/2)));
-        btnSi.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*3) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
+        btnSi.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*6) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
         btnSi.render(batch);
-        btnNo.setPosicion( (pantallaGana.getWidth()-(pantallaGana.getWidth()/3) + Si.getWidth()*8) , (pantallaGana.getHeight()-(pantallaGana.getHeight()/2) + Si.getWidth()) );
-        btnNo.render(batch);
 
     }
 
@@ -910,7 +913,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         assetManager.unload("btones.png");
 
-        assetManager.unload("continuar_nivel.png");
+        assetManager.unload("Finish.png");
         assetManager.unload("despertaste_continuar.png");
         assetManager.unload("Si.png");
         assetManager.unload("No.png");
@@ -1005,11 +1008,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 }
             }  else if (estadoJuego== EstadosJuego.GANO) {
                 if(btnSi.contiene(x,y)){
-                    juego.detener();
-                    juego.setScreen(new Menu(juego));
-                    estadoJuego= EstadosJuego.JUGANDO;
-                }
-                if(btnNo.contiene(x,y)){
                     juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego= EstadosJuego.PERDIO;
