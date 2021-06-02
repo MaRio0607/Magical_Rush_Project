@@ -139,6 +139,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private float yFondo = 0;
     //musica
     private Music music;
+    private Music Stora;
+
     //sonido
     private Sound Ssalto;
     private Sound Sdisp;
@@ -151,6 +153,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         music = juego.assetManager.get("musica/BOSS.mp3", Music.class);
         music.setLooping(true);
         music.play();
+
+        Stora= juego.assetManager.get("Audio/Enemigo/Steps.mp3", Music.class);
+        Stora.setLooping(true);
+        Stora.play();
     }
 
     /*
@@ -184,6 +190,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         Sdisp=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/Atack.mp3"));
         Smov=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/pasosRui.mp3"));
         Sitem=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/Item.mp3"));
+       // Stora=Gdx.audio.newSound(Gdx.files.internal("Audio/Enemigo/Steps.mp3"));
+
 
         //Dibuja rectangulos que son usados para hitboxes
         r1 = new Rectangle(0, 800, 1600, 10);
@@ -262,6 +270,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         //sonido
         assetManager.load("musica/BOSS.mp3", Music.class);
+        assetManager.load("Audio/Enemigo/Steps.mp3",Music.class);
 
         // Se bloquea hasta que cargue todos los recursos
         assetManager.finishLoading();
@@ -468,10 +477,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         if (estadoJuego == EstadosJuego.JUGANDO)
         {
+;
             torauma.actualizar();
         }
         if(torauma.getVida() == 0)
         {
+          //  Stora.stop();
             estadoJuego = EstadosJuego.GANO;
         }
         if( rui.getX() >= torauma.getX() && (torauma.getX()+torauma.getSprite().getWidth()) >= (rui.getX()+rui.getSprite().getWidth()) )
@@ -959,6 +970,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("torauma8.png");
 
         music.stop();
+        Stora.stop();
 
     }
 
@@ -1021,6 +1033,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 if(btnCont.contiene(x,y)){
                     estadoJuego= EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
+                    Stora.stop();
                     juego.detener();
                     juego.setScreen(new Menu(juego));
 
@@ -1038,6 +1051,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     estadoJuego= EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
+                    Stora.stop();
                     Smov.stop();
                     juego.detener();
                     juego.setScreen(new Menu(juego));
@@ -1045,6 +1059,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 }
             }  else if (estadoJuego== EstadosJuego.GANO) {
                 if(btnSi.contiene(x,y)){
+                    Stora.stop();
                     Smov.stop();
                     juego.detener();
                     juego.setScreen(new Menu(juego));

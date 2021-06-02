@@ -32,6 +32,7 @@ public class Juego extends Game
         assetManager.load("musica/Menu.mp3", Music.class);
         assetManager.load("musica/Nivel.mp3", Music.class);
         assetManager.load("musica/BOSS.mp3", Music.class);
+        assetManager.load("Audio/Enemigo/Steps.mp3", Music.class);
         //sonidos menu
         assetManager.load("btn/btn.mp3", Sound.class);
         assetManager.load("btn/Play.mp3", Sound.class);
