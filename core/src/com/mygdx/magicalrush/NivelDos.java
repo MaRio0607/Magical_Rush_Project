@@ -100,11 +100,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture vidaTexture;
     private Texture energiaTexture;
     private Texture puertaTexture;
+    private Texture hamsterTexture;
 
     private Array<Item> arrItem;
     private Item key, key2, key3;
     private Item vida, vidaS, vidaT;
     private Item energia, energiaS, energiaT, energiaF, energiaFt;
+    private Item hamster;
     private Item puerta;
     private int keyCount;
     private int keyNeed;
@@ -242,6 +244,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.load("Vida_Item.png", Texture.class);
         assetManager.load("Energia_Item.png", Texture.class);
         assetManager.load("puerta.png", Texture.class);
+        assetManager.load("H-Hamster.png", Texture.class);
 
         assetManager.load("Vida_0.png", Texture.class);
         assetManager.load("Vida_1.png", Texture.class);
@@ -305,6 +308,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         vidaTexture = assetManager.get("Vida_Item.png");
         energiaTexture = assetManager.get("Energia_Item.png");
         puertaTexture = assetManager.get("puerta.png");
+        hamsterTexture= assetManager.get("H-Hamster.png");
 
         vida0 = assetManager.get("Vida_0.png");
         vida1 = assetManager.get("Vida_1.png");
@@ -343,6 +347,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         energiaT = new Item(energiaTexture, 1150, 1200, 3);
         energiaF = new Item(energiaTexture, 750, 1135, 3);
         energiaFt = new Item(energiaTexture, 20, 1100, 3);
+        hamster=new Item(hamsterTexture,150, 1565, 5);
 
         puerta = new Item(puertaTexture, 1412,670,4);
 
@@ -419,7 +424,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
         UI(batch);
-
+        hamster.render(batch);
         key.render(batch);
         key2.render(batch);
         key3.render(batch);
@@ -562,6 +567,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
     private void actualizarItems() {
         arrItem=new Array<>();
+        arrItem.add(hamster);
         arrItem.add(key);
         arrItem.add(key2);
         arrItem.add(key3);

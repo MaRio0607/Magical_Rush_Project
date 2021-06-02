@@ -30,6 +30,8 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.logging.Handler;
+
 import javax.xml.soap.Text;
 
 
@@ -115,12 +117,14 @@ public class PantallaJuego implements Screen
     private Texture vidaTexture;
     private Texture energiaTexture;
     private Texture puertaTexture;
+    private Texture hamsterTexture;
 
     private Array<Item> arrItem;
     private Item key;
     private Item vida;
     private Item energia;
     private Item puerta;
+    private Item hamster;
     private int keyCount;
     private int keyNeed;
 
@@ -245,6 +249,7 @@ public class PantallaJuego implements Screen
         assetManager.load("Vida_Item.png", Texture.class);
         assetManager.load("Energia_Item.png", Texture.class);
         assetManager.load("puerta.png", Texture.class);
+        assetManager.load("H-Hamster.png", Texture.class);
 
         assetManager.load("Vida_0.png", Texture.class);
         assetManager.load("Vida_1.png", Texture.class);
@@ -313,6 +318,7 @@ public class PantallaJuego implements Screen
         vidaTexture = assetManager.get("Vida_Item.png");
         energiaTexture = assetManager.get("Energia_Item.png");
         puertaTexture = assetManager.get("puerta.png");
+        hamsterTexture= assetManager.get("H-Hamster.png");
 
         vida0 = assetManager.get("Vida_0.png");
         vida1 = assetManager.get("Vida_1.png");
@@ -342,6 +348,7 @@ public class PantallaJuego implements Screen
         vida = new Item(vidaTexture, 965, 635, 2);
         energia = new Item(energiaTexture, 250, 750, 3);
         puerta = new Item(puertaTexture, 1412,608,4);
+        hamster=new Item(hamsterTexture,100,880,5);
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
@@ -416,7 +423,7 @@ public class PantallaJuego implements Screen
         // Entre begin-end dibujamos nuestros objetos en pantalla
         batch.begin();
         UI(batch);
-
+        hamster.render(batch);
         key.render(batch);
         vida.render(batch);
         energia.render(batch);
@@ -548,6 +555,7 @@ public class PantallaJuego implements Screen
 
     private void actualizarItems() {
         arrItem=new Array<>();
+        arrItem.add(hamster);
         arrItem.add(key);
         arrItem.add(vida);
         arrItem.add(energia);
