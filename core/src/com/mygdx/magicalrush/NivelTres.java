@@ -143,6 +143,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Sound Ssalto;
     private Sound Sdisp;
     private Sound Smov;
+    private Sound Sitem;
+
 
     public NivelTres(Juego juego) {
         this.juego = juego;
@@ -181,6 +183,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         Ssalto=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/saltoRui.mp3"));
         Sdisp=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/Atack.mp3"));
         Smov=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/pasosRui.mp3"));
+        Sitem=Gdx.audio.newSound(Gdx.files.internal("Audio/Rui/Item.mp3"));
 
         //Dibuja rectangulos que son usados para hitboxes
         r1 = new Rectangle(0, 800, 1600, 10);
@@ -578,12 +581,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                 {
                     if(it.getTipo() == 2)
                     {
+                        Sitem.play();
                         rui.setVida(rui.getVida()+1);
                         it.setPosicion(-100,it.getY());
                         arrItem.removeIndex(i);
                     }
                     if(it.getTipo() == 3)
                     {
+                        Sitem.play();
                         rui.setEnergia(rui.getEnergia()+1);
                         it.setPosicion(-100,it.getY());
                         arrItem.removeIndex(i);
