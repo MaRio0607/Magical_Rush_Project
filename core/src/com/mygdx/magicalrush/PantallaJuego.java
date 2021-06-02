@@ -924,6 +924,7 @@ public class PantallaJuego implements Screen
                     }
                 }
             } else if (estadoJuego ==EstadosJuego.PAUSADO){
+
                 if(btnCont.contiene(x,y)){
                     estadoJuego=EstadosJuego.JUGANDO;
                 }if(btnMenu.contiene(x,y)){
@@ -933,28 +934,34 @@ public class PantallaJuego implements Screen
 
                     estadoJuego=EstadosJuego.PERDIO;
                 }if(btnReiniciar.contiene(x,y)){
+                    Smov.stop();
                     juego.setScreen(new PantallaCargando(juego));
                     juego.detener();
                     estadoJuego=EstadosJuego.JUGANDO;
 
                 }
+
             }  else if (estadoJuego==EstadosJuego.PERDIO) {
                 if(btnSi.contiene(x,y)){
+                    Smov.stop();
                     juego.setScreen(new PantallaCargando(juego));
                     estadoJuego=EstadosJuego.JUGANDO;
                 }
                 if(btnNo.contiene(x,y)){
+                    Smov.stop();
                     juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego=EstadosJuego.PERDIO;
                 }
             }  else if (estadoJuego==EstadosJuego.GANO) {
                 if(btnSi.contiene(x,y)){
+                    Smov.stop();
                     juego.setScreen(new NivelDos(juego));
                     estadoJuego=EstadosJuego.JUGANDO;
                  //   juego.detener();
                 }
                 if(btnNo.contiene(x,y)){
+                    Smov.stop();
                     juego.detener();
                     juego.setScreen(new Menu(juego));
                     estadoJuego=EstadosJuego.PERDIO;
