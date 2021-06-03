@@ -38,7 +38,8 @@ public class Slime
     /*
     Constructor del personaje, recibe una imagen con varios frames
      */
-    public Slime(Texture textura) {
+    public Slime(Texture textura,float x,float y) {
+        sprite.setPosition(x,y);
         // Lee la textura como región
         TextureRegion texturaCompleta = new TextureRegion(textura);
         // La divide en frames de **x**
