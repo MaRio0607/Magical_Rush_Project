@@ -38,14 +38,13 @@ public class Slime
     /*
     Constructor del personaje, recibe una imagen con varios frames
      */
-    public Slime(Texture textura,float x,float y) {
-        sprite.setPosition(x,y);
+    public Slime(Texture textura) {
         // Lee la textura como región
         TextureRegion texturaCompleta = new TextureRegion(textura);
         // La divide en frames de **x**
         TextureRegion[][] texturaPersonaje = texturaCompleta.split(60,66);
         // Crea la animación con tiempo de 0.25 segundos entre frames.
-        animacionSalto = new Animation(0.2f,texturaPersonaje[3][3], texturaPersonaje[3][2], texturaPersonaje[3][1], texturaPersonaje[3][0] );
+        animacionSalto = new Animation(0.2f,texturaPersonaje[0][0], texturaPersonaje[3][0], texturaPersonaje[2][0], texturaPersonaje[1][0] );
         // Animación infinita
         animacionSalto.setPlayMode(Animation.PlayMode.LOOP);
         // Inicia el timer que contará tiempo para saber qué frame se dibuja
@@ -172,7 +171,7 @@ public class Slime
     public void setVida(int v){vida = v;}
 
 
-    public void setPosicion(float x, int y) {
+    public void setPosicion(float x, float y) {
         sprite.setPosition(x,y);
     }
 

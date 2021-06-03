@@ -59,6 +59,7 @@ public class PantallaJuego implements Screen
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
     private Texture texturaEnemigo;
     private Personaje rui;
+    private Slime slime[]=new Slime[3];
     public static final int TAM_CELDA = 16;
 
     //Disparo del personaje
@@ -298,6 +299,9 @@ public class PantallaJuego implements Screen
         texturaPersonaje = assetManager.get("RUIS-Sheet.png");
         texturaEnemigo = assetManager.get("Slime-Sheet.png");
 
+        slime[0]=new Slime(texturaEnemigo);
+        slime[1]=new Slime(texturaEnemigo);
+        slime[2]=new Slime(texturaEnemigo);
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
         //Variables para conocer la posición del personaje en el mapa
@@ -349,6 +353,10 @@ public class PantallaJuego implements Screen
         energia = new Item(energiaTexture, 250, 750, 3);
         puerta = new Item(puertaTexture, 1412,608,4);
         hamster=new Item(hamsterTexture,100,880,5);
+
+        slime[0].setPosicion(1320,608);
+        slime[1].setPosicion(887,320);
+        slime[2].setPosicion(170,735);
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),900);
@@ -402,6 +410,7 @@ public class PantallaJuego implements Screen
             actualizarCamara(); // Mover la cámara para que siga al personaje
             probarChoqueParedes();
             actualizarItems();
+            actualizarSlimes();
         }
 
         // Dibujar
@@ -430,6 +439,9 @@ public class PantallaJuego implements Screen
         puerta.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
+        slime[0].render(batch);
+        slime[1].render(batch);
+        slime[2].render(batch);
 
         //Dibujar bolas de fuego
         for (Disparo bolaFuego:arrBolas){
@@ -597,7 +609,39 @@ public class PantallaJuego implements Screen
         }
 
     }
+    private void actualizarSlimes() {
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[0].getX()) && ((rui.getX() < slime[0].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[0].getY()) && (rui.getY()-70 < slime[0].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[0].setPosicion(-100,slime[0].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[1].getX()) && ((rui.getX() < slime[1].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[1].getY()) && (rui.getY()-70 < slime[1].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[1].setPosicion(-100,slime[1].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[2].getX()) && ((rui.getX() < slime[2].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[2].getY()) && (rui.getY()-70 < slime[2].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[2].setPosicion(-100,slime[2].getY());
+                }
+            }
+        }
 
+    }
     private void stats(){
 
         if(rui.getVida() == 0)
@@ -841,6 +885,7 @@ public class PantallaJuego implements Screen
         AssetManager assetManager = juego.getAssetManager();
         assetManager.unload("RUIS-Sheet.png");
         assetManager.unload("derecha.png");
+        assetManager.unload("Slime-Sheet.png");
         assetManager.unload("salto.png");
         assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
