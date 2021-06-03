@@ -42,7 +42,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     private Texture texturaPersonaje;       // Aquí cargamos la imagen del personaje con varios frames
     private Texture texturaEnemigo;
     private Personaje rui;
-    private Slime slime;
+    private Slime slime[]=new Slime[7];
     public static final int TAM_CELDA = 16;
 
     //Disparo del personaje
@@ -231,6 +231,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         AssetManager assetManager = juego.getAssetManager();   // Referencia al assetManager
 
         assetManager.load("RUIS-Sheet.png",Texture.class);
+        assetManager.load("Slime-Sheet.png",Texture.class);
         assetManager.load("disparo.png", Texture.class);
         assetManager.load("Cont_bot.png",Texture.class);
         assetManager.load("Cont_bot3.png",Texture.class);
@@ -287,7 +288,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
         // Cargar frames
         texturaPersonaje = assetManager.get("RUIS-Sheet.png");
+        texturaEnemigo = assetManager.get("Slime-Sheet.png");
 
+        slime[0]=new Slime(texturaEnemigo);
+        slime[1]=new Slime(texturaEnemigo);
+        slime[2]=new Slime(texturaEnemigo);
+        slime[3]=new Slime(texturaEnemigo);
+        slime[4]=new Slime(texturaEnemigo);
+        slime[5]=new Slime(texturaEnemigo);
+        slime[6]=new Slime(texturaEnemigo);
         // Crear el personaje
         rui = new Personaje(texturaPersonaje);
         //Variables para conocer la posición del personaje en el mapa
@@ -350,6 +359,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         hamster=new Item(hamsterTexture,150, 1565, 5);
 
         puerta = new Item(puertaTexture, 1412,670,4);
+        slime[0].setPosicion(700,670);
+        slime[1].setPosicion(230,1120);
+        slime[2].setPosicion(1460,1120);
+        slime[3].setPosicion(820,1435);
+        slime[4].setPosicion(250,1435);
+        slime[5].setPosicion(520,1120);
+        slime[6].setPosicion(550,1435);
 
         // Posición inicial del personaje
         rui.setPosicion(rui.getX(),1600);
@@ -403,6 +419,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             actualizarCamara(); // Mover la cámara para que siga al personaje
             probarChoqueParedes();
             actualizarItems();
+            actualizarSlimes();
         }
 
         // Dibujar
@@ -442,6 +459,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         puerta.render(batch);
 
         rui.render(batch);    // Dibuja el personaje
+        slime[0].render(batch);
+        slime[1].render(batch);
+        slime[2].render(batch);
+        slime[3].render(batch);
+        slime[4].render(batch);
+        slime[5].render(batch);
+        slime[6].render(batch);
 
         //Dibujar bolas de fuego
         for (Disparo bolaFuego:arrBolas){
@@ -620,7 +644,79 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         }
 
     }
+    private void actualizarSlimes() {
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[0].getX()) && ((rui.getX() < slime[0].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[0].getY()) && (rui.getY()-70 < slime[0].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[0].setPosicion(-100,slime[0].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[1].getX()) && ((rui.getX() < slime[1].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[1].getY()) && (rui.getY()-70 < slime[1].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[1].setPosicion(-100,slime[1].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[2].getX()) && ((rui.getX() < slime[2].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[2].getY()) && (rui.getY()-70 < slime[2].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[2].setPosicion(-100,slime[2].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[3].getX()) && ((rui.getX() < slime[3].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[3].getY()) && (rui.getY()-70 < slime[3].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[3].setPosicion(-100,slime[3].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[4].getX()) && ((rui.getX() < slime[4].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[4].getY()) && (rui.getY()-70 < slime[4].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[4].setPosicion(-100,slime[4].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[5].getX()) && ((rui.getX() < slime[5].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[5].getY()) && (rui.getY()-70 < slime[5].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[5].setPosicion(-100,slime[5].getY());
+                }
+            }
+        }
+        for (int i=0; i<slime.length; i++) {
+            if( ((rui.getX()+52) >= slime[6].getX()) && ((rui.getX() < slime[6].getX()+30)) )
+            {
+                if(((rui.getY()+72) >= slime[6].getY()) && (rui.getY()-70 < slime[6].getY()) )
+                {
+                    rui.setVida(rui.getVida()-1);
+                    slime[6].setPosicion(-100,slime[6].getY());
+                }
+            }
+        }
 
+    }
     private void stats(){
 
         if(rui.getVida() == 0)
@@ -707,6 +803,18 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             if(bolaFuego.getX()>=ANCHO_MAPA || bolaFuego.getX()<=0){
                 //borrar el objeto
                 arrBolas.removeIndex(i);
+            }
+            for(int k=slime.length-1;k>=0;k--){
+                if(bolaFuego.getX() >= slime[k].getX() && bolaFuego.getX() <= slime[k].getX()+slime[k].getSprite().getWidth())
+                {
+                    if( (bolaFuego.getY() <= slime[k].getY() + slime[k].getSprite().getHeight()) && (bolaFuego.getY() >= slime[k].getY()) )
+                    {
+                        arrBolas.removeIndex(i);
+                        slime[k].setVida(slime[k].getVida()-1);
+                        slime[k].setPosicion(-100,slime[k].getY());
+                    }
+
+                }
             }
         }
     }
@@ -899,6 +1007,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         assetManager.unload("RUIS-Sheet.png");
         assetManager.unload("derecha.png");
         assetManager.unload("salto.png");
+        assetManager.unload("Slime-Sheet.png");
         assetManager.unload("disparo.png");
         assetManager.unload("izquierda.png");
         assetManager.unload("SegundoNivel.tmx");

@@ -729,6 +729,18 @@ public class PantallaJuego implements Screen
                 //borrar el objeto
                 arrBolas.removeIndex(i);
             }
+            for(int k=slime.length-1;k>=0;k--){
+                if(bolaFuego.getX() >= slime[k].getX() && bolaFuego.getX() <= slime[k].getX()+slime[k].getSprite().getWidth())
+                {
+                    if( (bolaFuego.getY() <= slime[k].getY() + slime[k].getSprite().getHeight()) && (bolaFuego.getY() >= slime[k].getY()) )
+                    {
+                        arrBolas.removeIndex(i);
+                        slime[k].setVida(slime[k].getVida()-1);
+                        slime[k].setPosicion(-100,slime[k].getY());
+                    }
+
+                }
+            }
         }
     }
 
